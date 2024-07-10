@@ -170,7 +170,7 @@ ggplot(volcano_q, aes(x = `Coefficient (UC JP)`, y = log10q_UC, color=class, siz
                   color = "Black"
   ) +
   scale_x_continuous(
-    breaks = c(-3. -2, -1, 0, 1, 2, 3),
+    breaks = c(-3, -2, -1, 0, 1, 2, 3),
     limits = c(-3, 3)
   ) +
   theme(text = element_text(size = 25))
