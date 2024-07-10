@@ -466,7 +466,7 @@ rename(.data=US2_maaslin_CD, "Q-value (CD US2)" = "qval") -> US2_maaslin_CD
 
 #IBDvsControl 
 WO3 %>% filter(WO3$study == "Franzosa_2018_IBD" & WO3$geographic_location == "USA") -> US2 #timepoint=0
-US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #重複除外
+US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #Remove duplicates
 
 US2 %>% filter(US2$disease == "Ulcerative colitis"| US2$disease == "Control" | US2$disease == "Crohn's disease") -> US2
 US2 %>% select(sample_id, disease, Sex, Age) -> US2_meta
