@@ -2,7 +2,7 @@ library(ggstatsplot)
 library(dplyr)
 library(ggplot2)
 
-#Figure 1A, 1B
+#Figure 2c, 2d
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Figure用解析/Bacteriome_all_results_for_pval/ARG_Pval/Speceis vs ARG spearman")
 #ARG number ans sum 
 ARG_input <- read.csv("ARG_IBD.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #abundance data 
@@ -63,7 +63,7 @@ combine_plots(
   )
 )
 
-#Figure 4A, 4B
+#Figure 4c, 4d
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Figure用解析/vOTU_heatmap (pval)/vOTU_heatmap/解析用CSVファイル（上書き禁止）")
 vOTU_input <- read.csv("vOTU_heatmap_update_abundance_lyso.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #abundance data 
 colnames(vOTU_input)[5] <- "Sum_of_abundance_Lysogenic"
