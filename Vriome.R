@@ -6,7 +6,7 @@ library(ggpubr)
 library(ggstatsplot)
 library(reshape2)
 
-#MaAsLin Virome analysis (World data)
+#MaAsLin Virome analysis (World data, Figure 4e)
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/MaAsLin/Phage")
 SP_WO3<- read.csv("phage.csv", header = TRUE, na.strings = c(NA, ''), row.names = 1, check.names = FALSE) 
 SP_WO3 %>% t() %>% as.data.frame() -> SP_WO3
@@ -593,7 +593,7 @@ JP_MA %>% filter(abs(JP_MA$"Coefficient (CD JP)") > 1 & JP_MA$"Q-value (CD JP)" 
 vOTU_Heat_qval_fig %>% arrange(-vOTU_Heat_qval_fig$"Coefficient (IBD JP)") -> vOTU_Heat_qval_fig 
 column_to_rownames(vOTU_Heat_qval_fig, "feature2") -> vOTU_Heat_qval_fig
 
-#Heatmap creation
+#Heatmap creation (Figure 4e)
 vOTU_ID <- read.csv("vOTU_ID.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
 left_join(All_country, vOTU_ID, by = "feature") -> All_country2 #add vOTU number
 
@@ -662,17 +662,17 @@ Fig1 %>% select("Coefficient (CD JP)", "Coefficient (CD US2)", "Coefficient (CD 
 anno_width = unit(2, "cm")
 
 rename(.data= Gram_coef_IBD, "Japanese 4D cohort" = "Coefficient (IBD JP)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "US cohort" = "Coefficient (IBD US2)") -> Gram_coef_IBD #Franzosa_2018
+rename(.data= Gram_coef_IBD, "US cohort" = "Coefficient (IBD US2)") -> Gram_coef_IBD 
 rename(.data= Gram_coef_IBD, "NL cohort" = "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
 rename(.data= Gram_coef_IBD, "ES cohort" = "Coefficient (IBD Spain)") -> Gram_coef_IBD
 
 rename(.data= Gram_coef_UC, "Japanese 4D cohort" = "Coefficient (UC JP)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "US cohort" = "Coefficient (UC US2)") -> Gram_coef_UC #Franzosa_2018
+rename(.data= Gram_coef_UC, "US cohort" = "Coefficient (UC US2)") -> Gram_coef_UC 
 rename(.data= Gram_coef_UC, "NL cohort" = "Coefficient (UC Netherlands)") -> Gram_coef_UC
 rename(.data= Gram_coef_UC, "ES cohort" = "Coefficient (UC Spain)") -> Gram_coef_UC
 
 rename(.data= Gram_coef_CD, "Japanese 4D cohort" = "Coefficient (CD JP)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "US cohort" = "Coefficient (CD US2)") -> Gram_coef_CD #Franzosa_2018
+rename(.data= Gram_coef_CD, "US cohort" = "Coefficient (CD US2)") -> Gram_coef_CD 
 rename(.data= Gram_coef_CD, "NL cohort" = "Coefficient (CD Netherlands)") -> Gram_coef_CD
 rename(.data= Gram_coef_CD, "ES cohort" = "Coefficient (CD Spain)") -> Gram_coef_CD
 rename(.data= Gram_coef_CD, "CN cohort" = "Coefficient (CD China)") -> Gram_coef_CD
@@ -693,7 +693,7 @@ p3=pheatmap(as.matrix(Gram_coef_CD), fontsize = 7, cellwidth = 6, cellheight = 6
 
 draw(ra_host+ra3+ra_spe+p1+p2+p3, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
 
-#Spearman correlation analysis
+#Spearman correlation analysis (Supplementary Figure 10)
 #US2(Franzosa)vsJP 
 sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_country$"Coefficient (IBD US2)")) +
   geom_point() +
@@ -783,343 +783,6 @@ combine_plots(
   plotgrid.args = list(nrow = 4),
   annotation.args = list(
     title = "Phages between Japanese 4D cohort and external cohorts",
-    caption = ""
-  )
-)
-
-
-
-
-
-
-
-
-
-
-
-
-#Spearman correlation analysis
-#US2(Franzosa)vsJP 
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_country$"Coefficient (IBD US2)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs United State", subtitle = "IBD", x = "Coefficient value (Japan)", y = "Coefficient value (US)", tag = "a") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_US2_jp_ibd <- sp +  stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (UC JP)", y = All_country$"Coefficient (UC US2)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs United State", subtitle = "UC", x = "Coefficient value (Japan)", y = "Coefficient value (US)", tag = "b") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_US2_jp_uc <- sp + stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (CD JP)", y = All_country$"Coefficient (CD US2)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs United State", subtitle = "CD", x = "Coefficient value (Japan)", y = "Coefficient value (US)", tag = "c") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_US2_jp_cd <- sp + stat_cor(method = "spearman", label.x = -3, label.y = 2.5, cor.coef.name = c("rho"))
-
-#SpainvsJP
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_country$"Coefficient (IBD Spain)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs Spain", subtitle = "IBD", x = "Coefficient value (Japan)", y = "Coefficient value (Spain)", tag = "d") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_Spain_jp_ibd <- sp + stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (UC JP)", y = All_country$"Coefficient (UC Spain)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs Spain", subtitle = "UC", x = "Coefficient value (Japan)", y = "Coefficient value (Spain)", tag = "e") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_Spain_jp_uc <- sp + stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (CD JP)", y = All_country$"Coefficient (CD Spain)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs Spain", subtitle = "CD", x = "Coefficient value (Japan)", y = "Coefficient value (Spain)", tag = "f") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_Spain_jp_cd <- sp + stat_cor(method = "spearman", label.x = -2, label.y = 4, cor.coef.name = c("rho"))
-
-#NetherlandsvsJP 
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_country$"Coefficient (IBD Netherlands)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs Netherlands", subtitle = "IBD", x = "Coefficient value (Japan)", y = "Coefficient value (Netherlands)", tag = "g") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_Netherlands_jp_ibd <- sp +  stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (UC JP)", y = All_country$"Coefficient (UC Netherlands)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs Netherlands", subtitle = "UC", x = "Coefficient value (Japan)", y = "Coefficient value (Netherlands)", tag = "h") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_Netherlands_jp_uc <- sp + stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (CD JP)", y = All_country$"Coefficient (CD Netherlands)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs Netherlands", subtitle = "CD", x = "Coefficient value (Japan)", y = "Coefficient value (Netherlands)", tag = "i") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_Netherlands_jp_cd <- sp + stat_cor(method = "spearman", label.x = -2.5, label.y = 2.5, cor.coef.name = c("rho"))
-
-#ChinavsJPforCD
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (CD JP)", y = All_country$"Coefficient (CD China)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs China", subtitle = "CD", x = "Coefficient value (Japan)", y = "Coefficient value (China)", tag = "j") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_china_jp_cd <- sp + stat_cor(method = "spearman", label.x = -3, label.y = 3, cor.coef.name = c("rho"))
-
-combine_plots(
-  list(sp_US2_jp_ibd, sp_US2_jp_uc, sp_US2_jp_cd, sp_Spain_jp_ibd, sp_Spain_jp_uc, sp_Spain_jp_cd, sp_Netherlands_jp_ibd, sp_Netherlands_jp_uc, sp_Netherlands_jp_cd, sp_china_jp_cd),
-  plotgrid.args = list(nrow = 4),
-  annotation.args = list(
-    title = "Phages between Japan and US, EU & China",
-    caption = ""
-  )
-)
-
-
-
-
-#For references
-#MaAsLin for other data
-#Strazar_2021_Tanzania
-#UCvsControl
-WO3 %>% filter(WO3$study == "Strazar_2021_Tanzania" & WO3$timepoint == 0) -> Tanzania #timepoint = 0 
-Tanzania %>% distinct(subject_id, .keep_all=TRUE) -> Tanzania #Remove duplicates
-
-Tanzania %>% filter(Tanzania$disease == "Ulcerative colitis"| Tanzania$disease == "Control") -> Tanzania
-Tanzania %>% select(sample_id, disease, Sex, Age, bmi) -> Tanzania_meta
-column_to_rownames(Tanzania_meta, "sample_id") -> Tanzania_meta
-Tanzania_meta$"Sex"[which(Tanzania_meta$"Sex" == "male", TRUE)] <- 1
-Tanzania_meta$"Sex"[which(Tanzania_meta$"Sex" == "female", TRUE)] <- 0
-Tanzania_meta$"disease"[which(Tanzania_meta$"disease" == "Ulcerative colitis", TRUE)] <- 1
-Tanzania_meta$"disease"[which(Tanzania_meta$"disease" == "Control", TRUE)] <- 0
-Tanzania_meta <- apply(Tanzania_meta,c(1:2),as.numeric) %>% as.data.frame
-
-#SP
-Tanzania_SP <- Tanzania[, -which (colnames(Tanzania) %in% c("subject_id", "environment_material", "timepoint", 
-                                                            "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
-                                                            "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
-column_to_rownames(Tanzania_SP, "sample_id") -> Tanzania_SP
-
-keep <- apply(Tanzania_SP, 2, mean) > 1E-4 & apply(Tanzania_SP > 0, 2, sum) / nrow(Tanzania_SP) > 0.1 # mean abundance > 1E-4、Prevalence > 0.1
-Tanzania_SP <- Tanzania_SP[, keep]
-
-fit_data = Maaslin2(
-  input_data = Tanzania_SP, 
-  input_metadata = Tanzania_meta, 
-  min_abundance = 0, min_prevalence = 0, 
-  output = "Tanzania_UC", 
-  normalization = "NONE",
-  transform = "LOG",
-  standardize = FALSE,　
-  plot_scatter = FALSE, 
-  plot_heatmap = FALSE, 
-  cores = 4,
-  fixed_effects=c("disease,Age,Sex,bmi"),
-  reference = c("disease,0")) 
-
-fit_data$results -> Tanzania_maaslin
-Tanzania_maaslin %>% filter(Tanzania_maaslin$"metadata" == "disease") -> Tanzania_maaslin_UC
-Tanzania_maaslin_UC <- Tanzania_maaslin_UC[, -which (colnames(Tanzania_maaslin_UC) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
-rename(.data=Tanzania_maaslin_UC, "Coefficient (UC Tanzania)" = "coef") -> Tanzania_maaslin_UC
-rename(.data=Tanzania_maaslin_UC, "P-value (UC Tanzania)" = "pval") -> Tanzania_maaslin_UC
-rename(.data=Tanzania_maaslin_UC, "Q-value (UC Tanzania)" = "qval") -> Tanzania_maaslin_UC
-
-#Lloyd-Price_2019_HMP2IBD (US data)
-#UCvsControl
-WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint 
-US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
-
-US %>% filter(US$disease == "Ulcerative colitis"| US$disease == "Control") -> US
-US %>% select(sample_id, disease, Sex, Age) -> US_meta
-column_to_rownames(US_meta, "sample_id") -> US_meta
-US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
-US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
-US_meta$"disease"[which(US_meta$"disease" == "Ulcerative colitis", TRUE)] <- 1
-US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
-US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
-
-#SP
-US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
-                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
-                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
-column_to_rownames(US_SP, "sample_id") -> US_SP
-
-keep <- apply(US_SP, 2, mean) > 1E-4 & apply(US_SP > 0, 2, sum) / nrow(US_SP) > 0.1 # mean abundance > 1E-4、Prevalence > 0.1
-US_SP <- US_SP[, keep]
-
-fit_data = Maaslin2(
-  input_data = US_SP, 
-  input_metadata = US_meta, 
-  min_abundance = 0, min_prevalence = 0, 
-  output = "US_UC", 
-  normalization = "NONE",
-  transform = "LOG",
-  plot_scatter = FALSE, 
-  plot_heatmap = FALSE, 
-  standardize = FALSE,　
-  cores = 4,
-  fixed_effects=c("disease,Age,Sex"),
-  reference = c("disease,0")) 
-
-fit_data$results -> US_maaslin
-US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_UC
-US_maaslin_UC <- US_maaslin_UC[, -which (colnames(US_maaslin_UC) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
-rename(.data=US_maaslin_UC, "Coefficient (UC US)" = "coef") -> US_maaslin_UC
-rename(.data=US_maaslin_UC, "P-value (UC US)" = "pval") -> US_maaslin_UC
-rename(.data=US_maaslin_UC, "Q-value (UC US)" = "qval") -> US_maaslin_UC
-
-#CDvsControl
-WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint 
-US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
-
-US %>% filter(US$disease == "Crohn's disease"| US$disease == "Control") -> US
-US %>% select(sample_id, disease, Sex, Age) -> US_meta
-column_to_rownames(US_meta, "sample_id") -> US_meta
-US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
-US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
-US_meta$"disease"[which(US_meta$"disease" == "Crohn's disease", TRUE)] <- 1
-US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
-US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
-
-#SP
-US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
-                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
-                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
-column_to_rownames(US_SP, "sample_id") -> US_SP
-
-keep <- apply(US_SP, 2, mean) > 1E-4 & apply(US_SP > 0, 2, sum) / nrow(US_SP) > 0.1 # mean abundance > 1E-4、Prevalence > 0.1
-US_SP <- US_SP[, keep]
-
-fit_data = Maaslin2(
-  input_data = US_SP, 
-  input_metadata = US_meta, 
-  min_abundance = 0, min_prevalence = 0, 
-  output = "US_CD", 
-  normalization = "NONE",
-  transform = "LOG",
-  plot_scatter = FALSE, 
-  plot_heatmap = FALSE, 
-  standardize = FALSE,　
-  cores = 4,
-  fixed_effects=c("disease,Age,Sex"),
-  reference = c("disease,0")) 
-
-fit_data$results -> US_maaslin
-US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_CD
-US_maaslin_CD <- US_maaslin_CD[, -which (colnames(US_maaslin_CD) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
-rename(.data=US_maaslin_CD, "Coefficient (CD US)" = "coef") -> US_maaslin_CD
-rename(.data=US_maaslin_CD, "P-value (CD US)" = "pval") -> US_maaslin_CD
-rename(.data=US_maaslin_CD, "Q-value (CD US)" = "qval") -> US_maaslin_CD
-
-#IBDvsControl 
-WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint
-US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
-
-US %>% filter(US$disease == "Ulcerative colitis"| US$disease == "Control" | US$disease == "Crohn's disease") -> US
-US %>% select(sample_id, disease, Sex, Age) -> US_meta
-column_to_rownames(US_meta, "sample_id") -> US_meta
-US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
-US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
-US_meta$"disease"[which(US_meta$"disease" == "Ulcerative colitis" | US_meta$"disease" == "Crohn's disease", TRUE)] <- 1
-US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
-US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
-
-#SP
-US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
-                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
-                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
-column_to_rownames(US_SP, "sample_id") -> US_SP
-
-keep <- apply(US_SP, 2, mean) > 1E-4 & apply(US_SP > 0, 2, sum) / nrow(US_SP) > 0.1 # mean abundance > 1E-4、Prevalence > 0.1
-US_SP <- US_SP[, keep]
-
-fit_data = Maaslin2(
-  input_data = US_SP, 
-  input_metadata = US_meta, 
-  min_abundance = 0, min_prevalence = 0, 
-  output = "US_IBD", 
-  normalization = "NONE",
-  transform = "LOG",
-  plot_scatter = FALSE, 
-  plot_heatmap = FALSE, 
-  standardize = FALSE,
-  cores = 4,
-  fixed_effects=c("disease,Age,Sex"),
-  reference = c("disease,0")) 
-
-fit_data$results -> US_maaslin
-US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_IBD
-US_maaslin_IBD <- US_maaslin_IBD[, -which (colnames(US_maaslin_IBD) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
-rename(.data=US_maaslin_IBD, "Coefficient (IBD US)" = "coef") -> US_maaslin_IBD
-rename(.data=US_maaslin_IBD, "P-value (IBD US)" = "pval") -> US_maaslin_IBD
-rename(.data=US_maaslin_IBD, "Q-value (IBD US)" = "qval") -> US_maaslin_IBD
-
-#USvsJP 
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_country$"Coefficient (IBD US)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs United States (Lloyd-Price_2019)", subtitle = "IBD", x = "Coefficient value (Japan)", y = "Coefficient value (US)", tag = "A") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_us_jp_ibd <- sp +  stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (UC JP)", y = All_country$"Coefficient (UC US)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs United States (Lloyd-Price_2019)", subtitle = "UC", x = "Coefficient value (Japan)", y = "Coefficient value (US)", tag = "B") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_us_jp_uc <- sp + stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (CD JP)", y = All_country$"Coefficient (CD US)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs United States (Lloyd-Price_2019)", subtitle = "CD", x = "Coefficient value (Japan)", y = "Coefficient value (US)", tag = "C") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_us_jp_cd <- sp + stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-#TanzaniavsJP
-sp <- ggplot(All_country, aes(x = All_country$"Coefficient (UC JP)", y = All_country$"Coefficient (UC Tanzania)")) +
-  geom_point() +
-  theme_bw() +
-  geom_smooth(method = "lm") +
-  labs(title = "Japan vs Tanzania", subtitle = "UC", x = "Coefficient value (Japan)", y = "Coefficient value (Tanzania)", tag = "A") +
-  theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
-sp_tan_jp_uc <- sp + stat_cor(method = "spearman", label.x = -2, label.y = 2, cor.coef.name = c("rho"))
-
-#ChinavsJP
-combine_plots(
-  list(sp_Spain_jp_ibd, sp_Spain_jp_uc, sp_Spain_jp_cd, sp_Netherlands_jp_ibd, sp_Netherlands_jp_uc, sp_Netherlands_jp_cd),
-  plotgrid.args = list(nrow = 2),
-  annotation.args = list(
-    title = "Species between Japan and EU (mOTU3)",
-    caption = ""
-  )
-)
-
-combine_plots(
-  list(sp_tan_jp_uc, sp_china_jp_cd),
-  plotgrid.args = list(nrow = 1),
-  annotation.args = list(
-    title = "Species between Japan and Other Countries (mOTU3)",
     caption = ""
   )
 )
