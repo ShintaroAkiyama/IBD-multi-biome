@@ -36,8 +36,6 @@ China_SP <- China[, -which (colnames(China) %in% c("subject_id", "environment_ma
                                                    "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
 column_to_rownames(China_SP, "sample_id") -> China_SP
 
-China_SP <- na.omit(China_SP) #Omit all NA, metaデータでも同じ操作がいるのかは確認。西嶋先生プログラムエラーに対応するための処置。
-
 keep <- apply(China_SP, 2, mean) > X & apply(China_SP > 0, 2, sum) / nrow(China_SP) > Y # mean abundance > X、Prevalence > Y
 China_SP  <- China_SP[, keep]
 
@@ -75,6 +73,14 @@ rename(.data=China_maaslin_CD, "Q-value (CD China)" = "qval") -> China_maaslin_C
 
 #ES_MH, MetaHIT (Spain)
 #UCvsControl
+setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/MaAsLin/Fungi")
+SP_WO3<- read.csv("eukaryote.csv", header = TRUE, na.strings = c(NA, ''), row.names = 1) #check.names deleted as Spain ID has unique one modified by R
+SP_WO3 %>% t() %>% as.data.frame() -> SP_WO3　
+rownames_to_column(SP_WO3, "sample_id") -> SP_WO3　
+
+Meta_WO3<- read.csv("Bork_group.metadata.csv", header = TRUE, na.strings = c(NA, ''), row.names = 1)　
+WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
+
 WO3 %>% filter(WO3$study == "ES_MH, MetaHIT" & WO3$timepoint == 0) -> Spain #timepoint = 0
 Spain %>% distinct(subject_id, .keep_all=TRUE) -> Spain #Remove duplicates
 
@@ -92,6 +98,7 @@ Spain_SP <- Spain[, -which (colnames(Spain) %in% c("subject_id", "environment_ma
                                                    "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                                    "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
 column_to_rownames(Spain_SP, "sample_id") -> Spain_SP
+Spain_SP <- na.omit(Spain_SP) #Spain data has NA for phages and fungi
 
 keep <- apply(Spain_SP, 2, mean) > X & apply(Spain_SP > 0, 2, sum) / nrow(Spain_SP) > Y # mean abundance > X、Prevalence > Y
 Spain_SP  <- Spain_SP[, keep]
@@ -146,6 +153,7 @@ Spain_SP <- Spain[, -which (colnames(Spain) %in% c("subject_id", "environment_ma
                                                    "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                                    "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
 column_to_rownames(Spain_SP, "sample_id") -> Spain_SP
+Spain_SP <- na.omit(Spain_SP) #Spain data has NA for phages and fungi
 
 keep <- apply(Spain_SP, 2, mean) > X & apply(Spain_SP > 0, 2, sum) / nrow(Spain_SP) > Y # mean abundance > X、Prevalence > Y
 Spain_SP  <- Spain_SP[, keep]
@@ -187,7 +195,7 @@ WO3 %>% filter(WO3$study == "ES_MH, MetaHIT" & WO3$timepoint == 0) -> Spain #tim
 Spain %>% distinct(subject_id, .keep_all=TRUE) -> Spain #Remove duplicates
 
 Spain %>% filter(Spain$disease == "Ulcerative colitis"| Spain$disease == "Control" | Spain$disease == "Crohn's disease") -> Spain
-Spain %>% select(sample_id, disease, Sex, Age) -> Spain_meta
+Spain %>% select(sample_id, disease, Sex, Age, bmi) -> Spain_meta
 column_to_rownames(Spain_meta, "sample_id") -> Spain_meta
 Spain_meta$"Sex"[which(Spain_meta$"Sex" == "male", TRUE)] <- 1
 Spain_meta$"Sex"[which(Spain_meta$"Sex" == "female", TRUE)] <- 0
@@ -200,6 +208,7 @@ Spain_SP <- Spain[, -which (colnames(Spain) %in% c("subject_id", "environment_ma
                                                    "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                                    "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
 column_to_rownames(Spain_SP, "sample_id") -> Spain_SP
+Spain_SP <- na.omit(Spain_SP) #Spain data has NA for phages and fungi
 
 keep <- apply(Spain_SP, 2, mean) > X & apply(Spain_SP > 0, 2, sum) / nrow(Spain_SP) > Y # mean abundance > X、Prevalence > Y
 Spain_SP  <- Spain_SP[, keep]
@@ -236,226 +245,16 @@ rename(.data=Spain_maaslin_IBD, "Coefficient (IBD Spain)" = "coef") -> Spain_maa
 rename(.data=Spain_maaslin_IBD, "P-value (IBD Spain)" = "pval") -> Spain_maaslin_IBD
 rename(.data=Spain_maaslin_IBD, "Q-value (IBD Spain)" = "qval") -> Spain_maaslin_IBD
 
-#Strazar_2021_Tanzania
-#UCvsControl
-WO3 %>% filter(WO3$study == "Strazar_2021_Tanzania" & WO3$timepoint == 0) -> Tanzania #timepoint = 0 
-Tanzania %>% distinct(subject_id, .keep_all=TRUE) -> Tanzania #Remove duplicates
-
-Tanzania %>% filter(Tanzania$disease == "Ulcerative colitis"| Tanzania$disease == "Control") -> Tanzania
-Tanzania %>% select(sample_id, disease, Sex, Age, bmi) -> Tanzania_meta
-column_to_rownames(Tanzania_meta, "sample_id") -> Tanzania_meta
-Tanzania_meta$"Sex"[which(Tanzania_meta$"Sex" == "male", TRUE)] <- 1
-Tanzania_meta$"Sex"[which(Tanzania_meta$"Sex" == "female", TRUE)] <- 0
-Tanzania_meta$"disease"[which(Tanzania_meta$"disease" == "Ulcerative colitis", TRUE)] <- 1
-Tanzania_meta$"disease"[which(Tanzania_meta$"disease" == "Control", TRUE)] <- 0
-Tanzania_meta <- apply(Tanzania_meta,c(1:2),as.numeric) %>% as.data.frame
-
-#SP
-Tanzania_SP <- Tanzania[, -which (colnames(Tanzania) %in% c("subject_id", "environment_material", "timepoint", 
-                                                            "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
-                                                            "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
-column_to_rownames(Tanzania_SP, "sample_id") -> Tanzania_SP
-
-keep <- apply(Tanzania_SP, 2, mean) > X & apply(Tanzania_SP > 0, 2, sum) / nrow(Tanzania_SP) > Y # mean abundance > X、Prevalence > Y
-Tanzania_SP  <- Tanzania_SP[, keep]
-
-#Remove non-human data
-as.data.frame(t(Tanzania_SP)) -> Tanzania_SP
-rownames_to_column(Tanzania_SP, var = "feature") -> Tanzania_SP
-Human<- read.csv("Human.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #This list includes fungi or protozoa reported in human stool.
-rownames_to_column(Human, var = "feature") -> Human
-left_join(Tanzania_SP, Human, by = "feature") -> Tanzania_SP
-Tanzania_SP %>% filter(Tanzania_SP$human == 1) -> Tanzania_SP # include only fungi or protozoa reported in human 
-column_to_rownames(Tanzania_SP, var="feature") -> Tanzania_SP
-Tanzania_SP <- Tanzania_SP[, -which (colnames(Tanzania_SP) %in% c("human"))]
-as.data.frame(t(Tanzania_SP)) -> Tanzania_SP
-
-fit_data = Maaslin2(
-  input_data = Tanzania_SP, 
-  input_metadata = Tanzania_meta, 
-  min_abundance = 0, min_prevalence = 0, 
-  output = "Tanzania_UC", 
-  normalization = "NONE",
-  transform = "LOG",
-  standardize = FALSE,　
-  plot_scatter = FALSE, 
-  plot_heatmap = FALSE, 
-  cores = 4,
-  fixed_effects=c("disease,Age,Sex,bmi"),
-  reference = c("disease,0")) 
-
-fit_data$results -> Tanzania_maaslin
-Tanzania_maaslin %>% filter(Tanzania_maaslin$"metadata" == "disease") -> Tanzania_maaslin_UC
-Tanzania_maaslin_UC <- Tanzania_maaslin_UC[, -which (colnames(Tanzania_maaslin_UC) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
-rename(.data=Tanzania_maaslin_UC, "Coefficient (UC Tanzania)" = "coef") -> Tanzania_maaslin_UC
-rename(.data=Tanzania_maaslin_UC, "P-value (UC Tanzania)" = "pval") -> Tanzania_maaslin_UC
-rename(.data=Tanzania_maaslin_UC, "Q-value (UC Tanzania)" = "qval") -> Tanzania_maaslin_UC
-
-#Lloyd-Price_2019_HMP2IBD (US data)
-#UCvsControl
-WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint 
-US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
-
-US %>% filter(US$disease == "Ulcerative colitis"| US$disease == "Control") -> US
-US %>% select(sample_id, disease, Sex, Age) -> US_meta
-column_to_rownames(US_meta, "sample_id") -> US_meta
-US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
-US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
-US_meta$"disease"[which(US_meta$"disease" == "Ulcerative colitis", TRUE)] <- 1
-US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
-US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
-
-#SP
-US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
-                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
-                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
-column_to_rownames(US_SP, "sample_id") -> US_SP
-
-keep <- apply(US_SP, 2, mean) > X & apply(US_SP > 0, 2, sum) / nrow(US_SP) > Y # mean abundance > X、Prevalence > Y
-US_SP  <- US_SP[, keep]
-
-#Remove non-human data
-as.data.frame(t(US_SP)) -> US_SP
-rownames_to_column(US_SP, var = "feature") -> US_SP
-Human<- read.csv("Human.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #This list includes fungi or protozoa reported in human stool.
-rownames_to_column(Human, var = "feature") -> Human
-left_join(US_SP, Human, by = "feature") -> US_SP
-US_SP %>% filter(US_SP$human == 1) -> US_SP # include only fungi or protozoa reported in human 
-column_to_rownames(US_SP, var="feature") -> US_SP
-US_SP <- US_SP[, -which (colnames(US_SP) %in% c("human"))]
-as.data.frame(t(US_SP)) -> US_SP
-
-fit_data = Maaslin2(
-  input_data = US_SP, 
-  input_metadata = US_meta, 
-  min_abundance = 0, min_prevalence = 0, 
-  output = "US_UC", 
-  normalization = "NONE",
-  transform = "LOG",
-  plot_scatter = FALSE, 
-  plot_heatmap = FALSE, 
-  standardize = FALSE,　
-  cores = 4,
-  fixed_effects=c("disease,Age,Sex"),
-  reference = c("disease,0")) 
-
-fit_data$results -> US_maaslin
-US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_UC
-US_maaslin_UC <- US_maaslin_UC[, -which (colnames(US_maaslin_UC) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
-rename(.data=US_maaslin_UC, "Coefficient (UC US)" = "coef") -> US_maaslin_UC
-rename(.data=US_maaslin_UC, "P-value (UC US)" = "pval") -> US_maaslin_UC
-rename(.data=US_maaslin_UC, "Q-value (UC US)" = "qval") -> US_maaslin_UC
-
-#CDvsControl
-WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint 
-US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
-
-US %>% filter(US$disease == "Crohn's disease"| US$disease == "Control") -> US
-US %>% select(sample_id, disease, Sex, Age) -> US_meta
-column_to_rownames(US_meta, "sample_id") -> US_meta
-US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
-US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
-US_meta$"disease"[which(US_meta$"disease" == "Crohn's disease", TRUE)] <- 1
-US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
-US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
-
-#SP
-US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
-                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
-                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
-column_to_rownames(US_SP, "sample_id") -> US_SP
-
-keep <- apply(US_SP, 2, mean) > X & apply(US_SP > 0, 2, sum) / nrow(US_SP) > Y # mean abundance > X、Prevalence > Y
-US_SP  <- US_SP[, keep]
-
-#Remove non-human data
-as.data.frame(t(US_SP)) -> US_SP
-rownames_to_column(US_SP, var = "feature") -> US_SP
-Human<- read.csv("Human.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #This list includes fungi or protozoa reported in human stool.
-rownames_to_column(Human, var = "feature") -> Human
-left_join(US_SP, Human, by = "feature") -> US_SP
-US_SP %>% filter(US_SP$human == 1) -> US_SP # include only fungi or protozoa reported in human 
-column_to_rownames(US_SP, var="feature") -> US_SP
-US_SP <- US_SP[, -which (colnames(US_SP) %in% c("human"))]
-as.data.frame(t(US_SP)) -> US_SP
-
-fit_data = Maaslin2(
-  input_data = US_SP, 
-  input_metadata = US_meta, 
-  min_abundance = 0, min_prevalence = 0, 
-  output = "US_CD", 
-  normalization = "NONE",
-  transform = "LOG",
-  plot_scatter = FALSE, 
-  plot_heatmap = FALSE, 
-  standardize = FALSE,　
-  cores = 4,
-  fixed_effects=c("disease,Age,Sex"),
-  reference = c("disease,0")) 
-
-fit_data$results -> US_maaslin
-US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_CD
-US_maaslin_CD <- US_maaslin_CD[, -which (colnames(US_maaslin_CD) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
-rename(.data=US_maaslin_CD, "Coefficient (CD US)" = "coef") -> US_maaslin_CD
-rename(.data=US_maaslin_CD, "P-value (CD US)" = "pval") -> US_maaslin_CD
-rename(.data=US_maaslin_CD, "Q-value (CD US)" = "qval") -> US_maaslin_CD
-
-#IBDvsControl 
-WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint
-US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
-
-US %>% filter(US$disease == "Ulcerative colitis"| US$disease == "Control" | US$disease == "Crohn's disease") -> US
-US %>% select(sample_id, disease, Sex, Age) -> US_meta
-column_to_rownames(US_meta, "sample_id") -> US_meta
-US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
-US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
-US_meta$"disease"[which(US_meta$"disease" == "Ulcerative colitis" | US_meta$"disease" == "Crohn's disease", TRUE)] <- 1
-US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
-US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
-
-#SP
-US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
-                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
-                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
-column_to_rownames(US_SP, "sample_id") -> US_SP
-
-keep <- apply(US_SP, 2, mean) > X & apply(US_SP > 0, 2, sum) / nrow(US_SP) > Y # mean abundance > X、Prevalence > Y
-US_SP  <- US_SP[, keep]
-
-#Remove non-human data
-as.data.frame(t(US_SP)) -> US_SP
-rownames_to_column(US_SP, var = "feature") -> US_SP
-Human<- read.csv("Human.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #This list includes fungi or protozoa reported in human stool.
-rownames_to_column(Human, var = "feature") -> Human
-left_join(US_SP, Human, by = "feature") -> US_SP
-US_SP %>% filter(US_SP$human == 1) -> US_SP # include only fungi or protozoa reported in human
-column_to_rownames(US_SP, var="feature") -> US_SP
-US_SP <- US_SP[, -which (colnames(US_SP) %in% c("human"))]
-as.data.frame(t(US_SP)) -> US_SP
-
-fit_data = Maaslin2(
-  input_data = US_SP, 
-  input_metadata = US_meta, 
-  min_abundance = 0, min_prevalence = 0, 
-  output = "US_IBD", 
-  normalization = "NONE",
-  transform = "LOG",
-  plot_scatter = FALSE, 
-  plot_heatmap = FALSE, 
-  standardize = FALSE,
-  cores = 4,
-  fixed_effects=c("disease,Age,Sex"),
-  reference = c("disease,0")) 
-
-fit_data$results -> US_maaslin
-US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_IBD
-US_maaslin_IBD <- US_maaslin_IBD[, -which (colnames(US_maaslin_IBD) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
-rename(.data=US_maaslin_IBD, "Coefficient (IBD US)" = "coef") -> US_maaslin_IBD
-rename(.data=US_maaslin_IBD, "P-value (IBD US)" = "pval") -> US_maaslin_IBD
-rename(.data=US_maaslin_IBD, "Q-value (IBD US)" = "qval") -> US_maaslin_IBD
-
 #Franzosa_2018_IBD (US cohort)
 #UCvsControl
+setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/MaAsLin/Fungi")
+SP_WO3<- read.csv("eukaryote.csv", header = TRUE, na.strings = c(NA, ''), row.names = 1, check.names = FALSE) #check.names FALSE again after Spain data
+SP_WO3 %>% t() %>% as.data.frame() -> SP_WO3
+rownames_to_column(SP_WO3, "sample_id") -> SP_WO3
+
+Meta_WO3<- read.csv("Bork_group.metadata.csv", header = TRUE, na.strings = c(NA, ''), row.names = 1)
+WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
+
 WO3 %>% filter(WO3$study == "Franzosa_2018_IBD" & WO3$geographic_location == "USA") -> US2 #timepoints are all zero in this study 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #Remove duplicates
 
@@ -921,15 +720,13 @@ rename(.data=JP_maaslin_IBD_SP, "P-value (IBD JP)" = "pval") -> JP_maaslin_IBD_S
 rename(.data=JP_maaslin_IBD_SP, "Q-value (IBD JP)" = "qval") -> JP_maaslin_IBD_SP
 
 #Data integration
-US_MA <- full_join(full_join(US_maaslin_IBD, US_maaslin_UC, by = "feature"), US_maaslin_CD, by = "feature")
 US2_MA <- full_join(full_join(US2_maaslin_IBD, US2_maaslin_UC, by = "feature"), US2_maaslin_CD, by = "feature")
-US_MA2 <-full_join(US_MA, US2_MA, by = "feature")
 
 Spain_MA <- full_join(full_join(Spain_maaslin_IBD, Spain_maaslin_UC, by = "feature"), Spain_maaslin_CD, by = "feature")
 Netherlands_MA <- full_join(full_join(Netherlands_maaslin_IBD, Netherlands_maaslin_UC, by = "feature"), Netherlands_maaslin_CD, by = "feature")
 EU_MA <- full_join(Spain_MA, Netherlands_MA, by = "feature")
 
-All_OTHER <- full_join(full_join(full_join(US_MA2, EU_MA, by = "feature"), Tanzania_maaslin_UC, by = "feature"), China_maaslin_CD, by = "feature")
+All_OTHER <- full_join(full_join(US2_MA, EU_MA, by = "feature"), China_maaslin_CD, by = "feature")
 JP_MA <- full_join(full_join(JP_maaslin_IBD_SP, JP_maaslin_UC_SP, by = "feature"), JP_maaslin_CD_SP, by = "feature")
 
 All_country <- full_join(JP_MA, All_OTHER, by ="feature")
@@ -939,76 +736,18 @@ JP_MA %>% filter(JP_MA$"P-value (UC JP)"< 0.05 | JP_MA$"P-value (CD JP)" < 0.05)
 Fungi_map %>% arrange(-Fungi_map$"Coefficient (IBD JP)") ->Fungi_map
 
 #Heatmap creation
-#Select species with P-value<0.2 in UC or CD 
-All_country %>% filter(All_country$"P-value (CD JP)" <0.2 | All_country$"P-value (UC JP)"<0.2) -> SP_input
+#Select species with P-value<0.05 in UC or CD 
+All_country %>% filter(All_country$"P-value (CD JP)" <0.05 | All_country$"P-value (UC JP)"<0.05) -> SP_input
 SP_input %>% arrange(-SP_input$"Coefficient (IBD JP)") -> SP_input2 
 
 SP_input2$feature <- str_replace_all(SP_input2$feature, pattern="[.]", replacement=" ") #Remove dot in the fungal name
 column_to_rownames(SP_input2, "feature") ->SP_input2
 
 SP_input2 %>% select("Coefficient (IBD JP)", "P-value (IBD JP)", "Q-value (IBD JP)", "Coefficient (UC JP)", "P-value (UC JP)", "Q-value (UC JP)", "Coefficient (CD JP)", "P-value (CD JP)", "Q-value (CD JP)", 
-                                "Coefficient (IBD US)", "P-value (IBD US)", "Q-value (IBD US)", "Coefficient (UC US)", "P-value (UC US)", "Q-value (UC US)", "Coefficient (CD US)", "P-value (CD US)", "Q-value (CD US)",
-                                "Coefficient (IBD US2)", "P-value (IBD US2)", "Q-value (IBD US2)", "Coefficient (UC US2)", "P-value (UC US2)", "Q-value (UC US2)", "Coefficient (CD US2)", "P-value (CD US2)", "Q-value (CD US2)", 
-                                "Coefficient (IBD Spain)", "P-value (IBD Spain)", "Q-value (IBD Spain)", "Coefficient (UC Spain)", "P-value (UC Spain)", "Q-value (UC Spain)", "Coefficient (CD Spain)", "P-value (CD Spain)", "Q-value (CD Spain)", 
-                                "Coefficient (IBD Netherlands)", "P-value (IBD Netherlands)", "Q-value (IBD Netherlands)", "Coefficient (UC Netherlands)", "P-value (UC Netherlands)", "Q-value (UC Netherlands)", "Coefficient (CD Netherlands)", "P-value (CD Netherlands)", "Q-value (CD Netherlands)", 
-                                "Coefficient (UC Tanzania)", "P-value (UC Tanzania)", "Q-value (UC Tanzania)", "Coefficient (CD China)", "P-value (CD China)", "Q-value (CD China)") ->  Fig1 
-
-Fig1 %>% select("P-value (IBD JP)", "P-value (IBD US)", "P-value (IBD US2)", "P-value (IBD Spain)", "P-value (IBD Netherlands)") -> pval_IBD
-Fig1 %>% select("P-value (UC JP)", "P-value (UC US)",  "P-value (UC US2)", "P-value (UC Spain)", "P-value (UC Netherlands)", "P-value (UC Tanzania)") -> pval_UC
-Fig1 %>% select("P-value (CD JP)", "P-value (CD US)", "P-value (CD US2)", "P-value (CD Spain)", "P-value (CD Netherlands)", "P-value (CD China)") -> pval_CD
-
-pval_IBD[is.na(pval_IBD)] <- 1
-pval_UC[is.na(pval_UC)] <- 1
-pval_CD[is.na(pval_CD)] <- 1
-
-Fig1 %>% select("Coefficient (IBD JP)", "Coefficient (IBD US)", "Coefficient (IBD US2)", "Coefficient (IBD Spain)", "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
-Fig1 %>% select("Coefficient (UC JP)", "Coefficient (UC US)",  "Coefficient (UC US2)", "Coefficient (UC Spain)", "Coefficient (UC Netherlands)", "Coefficient (UC Tanzania)") -> Gram_coef_UC
-Fig1 %>% select("Coefficient (CD JP)", "Coefficient (CD US)", "Coefficient (CD US2)", "Coefficient (CD Spain)", "Coefficient (CD Netherlands)", "Coefficient (CD China)") -> Gram_coef_CD
-
-anno_width = unit(2, "cm")
-
-rename(.data= Gram_coef_IBD, "IBD (Japan)" = "Coefficient (IBD JP)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "IBD (United States, Lloyd-Price_2019)" = "Coefficient (IBD US)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "IBD (United States, Franzosa_2018)" = "Coefficient (IBD US2)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "IBD (Netherlands)" = "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "IBD (Spain)" = "Coefficient (IBD Spain)") -> Gram_coef_IBD
-
-rename(.data= Gram_coef_UC, "UC (Japan)" = "Coefficient (UC JP)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC (United States, Lloyd-Price_2019)" = "Coefficient (UC US)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC (United States, Franzosa_2018)" = "Coefficient (UC US2)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC (Netherlands)" = "Coefficient (UC Netherlands)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC (Spain)" = "Coefficient (UC Spain)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC (Tanzania)" = "Coefficient (UC Tanzania)") -> Gram_coef_UC
-
-rename(.data= Gram_coef_CD, "CD (Japan)" = "Coefficient (CD JP)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD (United States, Lloyd-Price_2019)" = "Coefficient (CD US)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD (United States, Franzosa_2018)" = "Coefficient (CD US2)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD (Netherlands)" = "Coefficient (CD Netherlands)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD (Spain)" = "Coefficient (CD Spain)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD (China)" = "Coefficient (CD China)") -> Gram_coef_CD
-
-lgd_sig = Legend(pch = "*", type = "points", labels = "P < 0.05")
-
-p1=pheatmap(as.matrix(Gram_coef_IBD), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(pval_IBD < 0.05,"*", ""), nrow(pval_IBD)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.4,0,0.4), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
-p2=pheatmap(as.matrix(Gram_coef_UC), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(pval_UC < 0.05,"*", ""), nrow(pval_UC)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.4,0,0.4), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
-p3=pheatmap(as.matrix(Gram_coef_CD), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(pval_CD < 0.05,"*", ""), nrow(pval_CD)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.4,0,0.4), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
-
-draw(p1+p2+p3, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
-
-#Removed Tanzania & Lloyd Price (True candidate for fig)
-#Select species with P<0.2 in UC or CD 
-All_country %>% filter(All_country$"P-value (CD JP)" < 0.2 | All_country$"P-value (UC JP)" < 0.2) -> SP_input
-SP_input %>% arrange(-SP_input$"Coefficient (IBD JP)") -> SP_input2 
-#column_to_rownames(SP_input2, "Feature") -> SP_input2_bacteriome
-
-SP_input2$feature <- str_replace_all(SP_input2$feature, pattern="[.]", replacement=" ") #Remove dot in the fungal name
-column_to_rownames(SP_input2, "feature") ->SP_input2
-
-SP_input2 %>% select("Coefficient (IBD JP)", "P-value (IBD JP)", "Q-value (IBD JP)", "Coefficient (UC JP)", "P-value (UC JP)", "Q-value (UC JP)", "Coefficient (CD JP)", "P-value (CD JP)", "Q-value (CD JP)", 
-                                "Coefficient (IBD US2)", "P-value (IBD US2)", "Q-value (IBD US2)", "Coefficient (UC US2)", "P-value (UC US2)",  "Q-value (UC US2)", "Coefficient (CD US2)", "P-value (CD US2)", "Q-value (CD US2)", 
-                                "Coefficient (IBD Spain)", "P-value (IBD Spain)", "Q-value (IBD Spain)", "Coefficient (UC Spain)", "P-value (UC Spain)", "Q-value (UC Spain)", "Coefficient (CD Spain)", "P-value (CD Spain)", "Q-value (CD Spain)", 
-                                "Coefficient (IBD Netherlands)", "P-value (IBD Netherlands)", "Q-value (IBD Netherlands)", "Coefficient (UC Netherlands)", "P-value (UC Netherlands)", "Q-value (UC Netherlands)", "Coefficient (CD Netherlands)", "P-value (CD Netherlands)", "Q-value (CD Netherlands)",  
-                                "Coefficient (CD China)", "P-value (CD China)", "Q-value (CD China)") ->  Fig1 
+                     "Coefficient (IBD US2)", "P-value (IBD US2)", "Q-value (IBD US2)", "Coefficient (UC US2)", "P-value (UC US2)",  "Q-value (UC US2)", "Coefficient (CD US2)", "P-value (CD US2)", "Q-value (CD US2)", 
+                     "Coefficient (IBD Spain)", "P-value (IBD Spain)", "Q-value (IBD Spain)", "Coefficient (UC Spain)", "P-value (UC Spain)", "Q-value (UC Spain)", "Coefficient (CD Spain)", "P-value (CD Spain)", "Q-value (CD Spain)", 
+                     "Coefficient (IBD Netherlands)", "P-value (IBD Netherlands)", "Q-value (IBD Netherlands)", "Coefficient (UC Netherlands)", "P-value (UC Netherlands)", "Q-value (UC Netherlands)", "Coefficient (CD Netherlands)", "P-value (CD Netherlands)", "Q-value (CD Netherlands)",  
+                     "Coefficient (CD China)", "P-value (CD China)", "Q-value (CD China)") ->  Fig1 
 
 Fig1 %>% select("P-value (IBD JP)", "P-value (IBD US2)", "P-value (IBD Spain)", "P-value (IBD Netherlands)") -> pval_IBD
 Fig1 %>% select("P-value (UC JP)",  "P-value (UC US2)", "P-value (UC Spain)", "P-value (UC Netherlands)") -> pval_UC
@@ -1024,21 +763,21 @@ Fig1 %>% select("Coefficient (CD JP)", "Coefficient (CD US2)", "Coefficient (CD 
 
 anno_width = unit(2, "cm")
 
-rename(.data= Gram_coef_IBD, "IBD (Japan)" = "Coefficient (IBD JP)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "IBD (United States)" = "Coefficient (IBD US2)") -> Gram_coef_IBD #Franzosa_2018
-rename(.data= Gram_coef_IBD, "IBD (Netherlands)" = "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "IBD (Spain)" = "Coefficient (IBD Spain)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "Japanese 4D cohort" = "Coefficient (IBD JP)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "US cohort" = "Coefficient (IBD US2)") -> Gram_coef_IBD 
+rename(.data= Gram_coef_IBD, "NL cohort" = "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "ES cohort" = "Coefficient (IBD Spain)") -> Gram_coef_IBD
 
-rename(.data= Gram_coef_UC, "UC (Japan)" = "Coefficient (UC JP)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC (United States)" = "Coefficient (UC US2)") -> Gram_coef_UC #Franzosa_2018
-rename(.data= Gram_coef_UC, "UC (Netherlands)" = "Coefficient (UC Netherlands)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC (Spain)" = "Coefficient (UC Spain)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "Japanese 4D cohort" = "Coefficient (UC JP)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "US cohort" = "Coefficient (UC US2)") -> Gram_coef_UC 
+rename(.data= Gram_coef_UC, "NL cohort" = "Coefficient (UC Netherlands)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "ES cohort" = "Coefficient (UC Spain)") -> Gram_coef_UC
 
-rename(.data= Gram_coef_CD, "CD (Japan)" = "Coefficient (CD JP)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD (United States)" = "Coefficient (CD US2)") -> Gram_coef_CD #Franzosa_2018
-rename(.data= Gram_coef_CD, "CD (Netherlands)" = "Coefficient (CD Netherlands)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD (Spain)" = "Coefficient (CD Spain)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD (China)" = "Coefficient (CD China)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "Japanese 4D cohort" = "Coefficient (CD JP)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "US cohort" = "Coefficient (CD US2)") -> Gram_coef_CD 
+rename(.data= Gram_coef_CD, "NL cohort" = "Coefficient (CD Netherlands)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "ES cohort" = "Coefficient (CD Spain)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "CN cohort" = "Coefficient (CD China)") -> Gram_coef_CD
 
 lgd_sig = Legend(pch = "*", type = "points", labels = "P < 0.05")
 
@@ -1048,6 +787,13 @@ p3=pheatmap(as.matrix(Gram_coef_CD), fontsize = 5, cellwidth = 8, cellheight = 8
 
 draw(p1+p2+p3, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
 
+
+
+
+
+
+
+#For references
 #Spearman correlation analysis
 #USvsJP 
 sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_country$"Coefficient (IBD US)")) +
@@ -1211,4 +957,271 @@ combine_plots(
     caption = ""
   )
 )
+
+#Strazar_2021_Tanzania
+#UCvsControl
+WO3 %>% filter(WO3$study == "Strazar_2021_Tanzania" & WO3$timepoint == 0) -> Tanzania #timepoint = 0 
+Tanzania %>% distinct(subject_id, .keep_all=TRUE) -> Tanzania #Remove duplicates
+
+Tanzania %>% filter(Tanzania$disease == "Ulcerative colitis"| Tanzania$disease == "Control") -> Tanzania
+Tanzania %>% select(sample_id, disease, Sex, Age, bmi) -> Tanzania_meta
+column_to_rownames(Tanzania_meta, "sample_id") -> Tanzania_meta
+Tanzania_meta$"Sex"[which(Tanzania_meta$"Sex" == "male", TRUE)] <- 1
+Tanzania_meta$"Sex"[which(Tanzania_meta$"Sex" == "female", TRUE)] <- 0
+Tanzania_meta$"disease"[which(Tanzania_meta$"disease" == "Ulcerative colitis", TRUE)] <- 1
+Tanzania_meta$"disease"[which(Tanzania_meta$"disease" == "Control", TRUE)] <- 0
+Tanzania_meta <- apply(Tanzania_meta,c(1:2),as.numeric) %>% as.data.frame
+
+#SP
+Tanzania_SP <- Tanzania[, -which (colnames(Tanzania) %in% c("subject_id", "environment_material", "timepoint", 
+                                                            "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
+                                                            "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
+column_to_rownames(Tanzania_SP, "sample_id") -> Tanzania_SP
+
+keep <- apply(Tanzania_SP, 2, mean) > X & apply(Tanzania_SP > 0, 2, sum) / nrow(Tanzania_SP) > Y # mean abundance > X、Prevalence > Y
+Tanzania_SP  <- Tanzania_SP[, keep]
+
+#Remove non-human data
+as.data.frame(t(Tanzania_SP)) -> Tanzania_SP
+rownames_to_column(Tanzania_SP, var = "feature") -> Tanzania_SP
+Human<- read.csv("Human.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #This list includes fungi or protozoa reported in human stool.
+rownames_to_column(Human, var = "feature") -> Human
+left_join(Tanzania_SP, Human, by = "feature") -> Tanzania_SP
+Tanzania_SP %>% filter(Tanzania_SP$human == 1) -> Tanzania_SP # include only fungi or protozoa reported in human 
+column_to_rownames(Tanzania_SP, var="feature") -> Tanzania_SP
+Tanzania_SP <- Tanzania_SP[, -which (colnames(Tanzania_SP) %in% c("human"))]
+as.data.frame(t(Tanzania_SP)) -> Tanzania_SP
+
+fit_data = Maaslin2(
+  input_data = Tanzania_SP, 
+  input_metadata = Tanzania_meta, 
+  min_abundance = 0, min_prevalence = 0, 
+  output = "Tanzania_UC", 
+  normalization = "NONE",
+  transform = "LOG",
+  standardize = FALSE,　
+  plot_scatter = FALSE, 
+  plot_heatmap = FALSE, 
+  cores = 4,
+  fixed_effects=c("disease,Age,Sex,bmi"),
+  reference = c("disease,0")) 
+
+fit_data$results -> Tanzania_maaslin
+Tanzania_maaslin %>% filter(Tanzania_maaslin$"metadata" == "disease") -> Tanzania_maaslin_UC
+Tanzania_maaslin_UC <- Tanzania_maaslin_UC[, -which (colnames(Tanzania_maaslin_UC) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
+rename(.data=Tanzania_maaslin_UC, "Coefficient (UC Tanzania)" = "coef") -> Tanzania_maaslin_UC
+rename(.data=Tanzania_maaslin_UC, "P-value (UC Tanzania)" = "pval") -> Tanzania_maaslin_UC
+rename(.data=Tanzania_maaslin_UC, "Q-value (UC Tanzania)" = "qval") -> Tanzania_maaslin_UC
+
+#Lloyd-Price_2019_HMP2IBD (US data)
+#UCvsControl
+WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint 
+US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
+
+US %>% filter(US$disease == "Ulcerative colitis"| US$disease == "Control") -> US
+US %>% select(sample_id, disease, Sex, Age) -> US_meta
+column_to_rownames(US_meta, "sample_id") -> US_meta
+US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
+US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
+US_meta$"disease"[which(US_meta$"disease" == "Ulcerative colitis", TRUE)] <- 1
+US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
+US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
+
+#SP
+US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
+                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
+                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
+column_to_rownames(US_SP, "sample_id") -> US_SP
+
+keep <- apply(US_SP, 2, mean) > X & apply(US_SP > 0, 2, sum) / nrow(US_SP) > Y # mean abundance > X、Prevalence > Y
+US_SP  <- US_SP[, keep]
+
+#Remove non-human data
+as.data.frame(t(US_SP)) -> US_SP
+rownames_to_column(US_SP, var = "feature") -> US_SP
+Human<- read.csv("Human.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #This list includes fungi or protozoa reported in human stool.
+rownames_to_column(Human, var = "feature") -> Human
+left_join(US_SP, Human, by = "feature") -> US_SP
+US_SP %>% filter(US_SP$human == 1) -> US_SP # include only fungi or protozoa reported in human 
+column_to_rownames(US_SP, var="feature") -> US_SP
+US_SP <- US_SP[, -which (colnames(US_SP) %in% c("human"))]
+as.data.frame(t(US_SP)) -> US_SP
+
+fit_data = Maaslin2(
+  input_data = US_SP, 
+  input_metadata = US_meta, 
+  min_abundance = 0, min_prevalence = 0, 
+  output = "US_UC", 
+  normalization = "NONE",
+  transform = "LOG",
+  plot_scatter = FALSE, 
+  plot_heatmap = FALSE, 
+  standardize = FALSE,　
+  cores = 4,
+  fixed_effects=c("disease,Age,Sex"),
+  reference = c("disease,0")) 
+
+fit_data$results -> US_maaslin
+US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_UC
+US_maaslin_UC <- US_maaslin_UC[, -which (colnames(US_maaslin_UC) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
+rename(.data=US_maaslin_UC, "Coefficient (UC US)" = "coef") -> US_maaslin_UC
+rename(.data=US_maaslin_UC, "P-value (UC US)" = "pval") -> US_maaslin_UC
+rename(.data=US_maaslin_UC, "Q-value (UC US)" = "qval") -> US_maaslin_UC
+
+#CDvsControl
+WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint 
+US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
+
+US %>% filter(US$disease == "Crohn's disease"| US$disease == "Control") -> US
+US %>% select(sample_id, disease, Sex, Age) -> US_meta
+column_to_rownames(US_meta, "sample_id") -> US_meta
+US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
+US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
+US_meta$"disease"[which(US_meta$"disease" == "Crohn's disease", TRUE)] <- 1
+US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
+US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
+
+#SP
+US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
+                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
+                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
+column_to_rownames(US_SP, "sample_id") -> US_SP
+
+keep <- apply(US_SP, 2, mean) > X & apply(US_SP > 0, 2, sum) / nrow(US_SP) > Y # mean abundance > X、Prevalence > Y
+US_SP  <- US_SP[, keep]
+
+#Remove non-human data
+as.data.frame(t(US_SP)) -> US_SP
+rownames_to_column(US_SP, var = "feature") -> US_SP
+Human<- read.csv("Human.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #This list includes fungi or protozoa reported in human stool.
+rownames_to_column(Human, var = "feature") -> Human
+left_join(US_SP, Human, by = "feature") -> US_SP
+US_SP %>% filter(US_SP$human == 1) -> US_SP # include only fungi or protozoa reported in human 
+column_to_rownames(US_SP, var="feature") -> US_SP
+US_SP <- US_SP[, -which (colnames(US_SP) %in% c("human"))]
+as.data.frame(t(US_SP)) -> US_SP
+
+fit_data = Maaslin2(
+  input_data = US_SP, 
+  input_metadata = US_meta, 
+  min_abundance = 0, min_prevalence = 0, 
+  output = "US_CD", 
+  normalization = "NONE",
+  transform = "LOG",
+  plot_scatter = FALSE, 
+  plot_heatmap = FALSE, 
+  standardize = FALSE,　
+  cores = 4,
+  fixed_effects=c("disease,Age,Sex"),
+  reference = c("disease,0")) 
+
+fit_data$results -> US_maaslin
+US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_CD
+US_maaslin_CD <- US_maaslin_CD[, -which (colnames(US_maaslin_CD) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
+rename(.data=US_maaslin_CD, "Coefficient (CD US)" = "coef") -> US_maaslin_CD
+rename(.data=US_maaslin_CD, "P-value (CD US)" = "pval") -> US_maaslin_CD
+rename(.data=US_maaslin_CD, "Q-value (CD US)" = "qval") -> US_maaslin_CD
+
+#IBDvsControl 
+WO3 %>% filter(WO3$study == "Lloyd-Price_2019_HMP2IBD") -> US #No specific timepoint
+US %>% distinct(subject_id, .keep_all=TRUE) -> US #Remove duplicates
+
+US %>% filter(US$disease == "Ulcerative colitis"| US$disease == "Control" | US$disease == "Crohn's disease") -> US
+US %>% select(sample_id, disease, Sex, Age) -> US_meta
+column_to_rownames(US_meta, "sample_id") -> US_meta
+US_meta$"Sex"[which(US_meta$"Sex" == "male", TRUE)] <- 1
+US_meta$"Sex"[which(US_meta$"Sex" == "female", TRUE)] <- 0
+US_meta$"disease"[which(US_meta$"disease" == "Ulcerative colitis" | US_meta$"disease" == "Crohn's disease", TRUE)] <- 1
+US_meta$"disease"[which(US_meta$"disease" == "Control", TRUE)] <- 0
+US_meta <- apply(US_meta,c(1:2),as.numeric) %>% as.data.frame
+
+#SP
+US_SP <- US[, -which (colnames(US) %in% c("subject_id", "environment_material", "timepoint", 
+                                          "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
+                                          "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
+column_to_rownames(US_SP, "sample_id") -> US_SP
+
+keep <- apply(US_SP, 2, mean) > X & apply(US_SP > 0, 2, sum) / nrow(US_SP) > Y # mean abundance > X、Prevalence > Y
+US_SP  <- US_SP[, keep]
+
+#Remove non-human data
+as.data.frame(t(US_SP)) -> US_SP
+rownames_to_column(US_SP, var = "feature") -> US_SP
+Human<- read.csv("Human.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #This list includes fungi or protozoa reported in human stool.
+rownames_to_column(Human, var = "feature") -> Human
+left_join(US_SP, Human, by = "feature") -> US_SP
+US_SP %>% filter(US_SP$human == 1) -> US_SP # include only fungi or protozoa reported in human
+column_to_rownames(US_SP, var="feature") -> US_SP
+US_SP <- US_SP[, -which (colnames(US_SP) %in% c("human"))]
+as.data.frame(t(US_SP)) -> US_SP
+
+fit_data = Maaslin2(
+  input_data = US_SP, 
+  input_metadata = US_meta, 
+  min_abundance = 0, min_prevalence = 0, 
+  output = "US_IBD", 
+  normalization = "NONE",
+  transform = "LOG",
+  plot_scatter = FALSE, 
+  plot_heatmap = FALSE, 
+  standardize = FALSE,
+  cores = 4,
+  fixed_effects=c("disease,Age,Sex"),
+  reference = c("disease,0")) 
+
+fit_data$results -> US_maaslin
+US_maaslin %>% filter(US_maaslin$"metadata" == "disease") -> US_maaslin_IBD
+US_maaslin_IBD <- US_maaslin_IBD[, -which (colnames(US_maaslin_IBD) %in% c("metadata", "value", "stderr", "name", "N", "N.not.zero"))] 
+rename(.data=US_maaslin_IBD, "Coefficient (IBD US)" = "coef") -> US_maaslin_IBD
+rename(.data=US_maaslin_IBD, "P-value (IBD US)" = "pval") -> US_maaslin_IBD
+rename(.data=US_maaslin_IBD, "Q-value (IBD US)" = "qval") -> US_maaslin_IBD
+
+SP_input2 %>% select("Coefficient (IBD JP)", "P-value (IBD JP)", "Q-value (IBD JP)", "Coefficient (UC JP)", "P-value (UC JP)", "Q-value (UC JP)", "Coefficient (CD JP)", "P-value (CD JP)", "Q-value (CD JP)", 
+                     "Coefficient (IBD US)", "P-value (IBD US)", "Q-value (IBD US)", "Coefficient (UC US)", "P-value (UC US)", "Q-value (UC US)", "Coefficient (CD US)", "P-value (CD US)", "Q-value (CD US)",
+                     "Coefficient (IBD US2)", "P-value (IBD US2)", "Q-value (IBD US2)", "Coefficient (UC US2)", "P-value (UC US2)", "Q-value (UC US2)", "Coefficient (CD US2)", "P-value (CD US2)", "Q-value (CD US2)", 
+                     "Coefficient (IBD Spain)", "P-value (IBD Spain)", "Q-value (IBD Spain)", "Coefficient (UC Spain)", "P-value (UC Spain)", "Q-value (UC Spain)", "Coefficient (CD Spain)", "P-value (CD Spain)", "Q-value (CD Spain)", 
+                     "Coefficient (IBD Netherlands)", "P-value (IBD Netherlands)", "Q-value (IBD Netherlands)", "Coefficient (UC Netherlands)", "P-value (UC Netherlands)", "Q-value (UC Netherlands)", "Coefficient (CD Netherlands)", "P-value (CD Netherlands)", "Q-value (CD Netherlands)", 
+                     "Coefficient (UC Tanzania)", "P-value (UC Tanzania)", "Q-value (UC Tanzania)", "Coefficient (CD China)", "P-value (CD China)", "Q-value (CD China)") ->  Fig1 
+
+Fig1 %>% select("P-value (IBD JP)", "P-value (IBD US)", "P-value (IBD US2)", "P-value (IBD Spain)", "P-value (IBD Netherlands)") -> pval_IBD
+Fig1 %>% select("P-value (UC JP)", "P-value (UC US)",  "P-value (UC US2)", "P-value (UC Spain)", "P-value (UC Netherlands)", "P-value (UC Tanzania)") -> pval_UC
+Fig1 %>% select("P-value (CD JP)", "P-value (CD US)", "P-value (CD US2)", "P-value (CD Spain)", "P-value (CD Netherlands)", "P-value (CD China)") -> pval_CD
+
+pval_IBD[is.na(pval_IBD)] <- 1
+pval_UC[is.na(pval_UC)] <- 1
+pval_CD[is.na(pval_CD)] <- 1
+
+Fig1 %>% select("Coefficient (IBD JP)", "Coefficient (IBD US)", "Coefficient (IBD US2)", "Coefficient (IBD Spain)", "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
+Fig1 %>% select("Coefficient (UC JP)", "Coefficient (UC US)",  "Coefficient (UC US2)", "Coefficient (UC Spain)", "Coefficient (UC Netherlands)", "Coefficient (UC Tanzania)") -> Gram_coef_UC
+Fig1 %>% select("Coefficient (CD JP)", "Coefficient (CD US)", "Coefficient (CD US2)", "Coefficient (CD Spain)", "Coefficient (CD Netherlands)", "Coefficient (CD China)") -> Gram_coef_CD
+
+anno_width = unit(2, "cm")
+
+rename(.data= Gram_coef_IBD, "IBD (Japan)" = "Coefficient (IBD JP)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "IBD (United States, Lloyd-Price_2019)" = "Coefficient (IBD US)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "IBD (United States, Franzosa_2018)" = "Coefficient (IBD US2)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "IBD (Netherlands)" = "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "IBD (Spain)" = "Coefficient (IBD Spain)") -> Gram_coef_IBD
+
+rename(.data= Gram_coef_UC, "UC (Japan)" = "Coefficient (UC JP)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "UC (United States, Lloyd-Price_2019)" = "Coefficient (UC US)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "UC (United States, Franzosa_2018)" = "Coefficient (UC US2)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "UC (Netherlands)" = "Coefficient (UC Netherlands)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "UC (Spain)" = "Coefficient (UC Spain)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "UC (Tanzania)" = "Coefficient (UC Tanzania)") -> Gram_coef_UC
+
+rename(.data= Gram_coef_CD, "CD (Japan)" = "Coefficient (CD JP)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "CD (United States, Lloyd-Price_2019)" = "Coefficient (CD US)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "CD (United States, Franzosa_2018)" = "Coefficient (CD US2)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "CD (Netherlands)" = "Coefficient (CD Netherlands)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "CD (Spain)" = "Coefficient (CD Spain)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "CD (China)" = "Coefficient (CD China)") -> Gram_coef_CD
+
+lgd_sig = Legend(pch = "*", type = "points", labels = "P < 0.05")
+
+p1=pheatmap(as.matrix(Gram_coef_IBD), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(pval_IBD < 0.05,"*", ""), nrow(pval_IBD)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.4,0,0.4), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
+p2=pheatmap(as.matrix(Gram_coef_UC), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(pval_UC < 0.05,"*", ""), nrow(pval_UC)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.4,0,0.4), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
+p3=pheatmap(as.matrix(Gram_coef_CD), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(pval_CD < 0.05,"*", ""), nrow(pval_CD)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.4,0,0.4), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
+
+draw(p1+p2+p3, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
 

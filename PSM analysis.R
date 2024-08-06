@@ -240,8 +240,8 @@ JP_MA %>% mutate(ID = as.numeric(JP_MA$ID)) -> JP_MA
 JP_MA <- full_join(JP_MA, ID, by ="ID")
 
 #Heatmap creation
-#Select species with abs coef>0.8 and FDR<0.1 in UC or CD
-JP_MA %>% filter(abs(JP_MA$"Coefficient (CD PSM)") > 0.8 & JP_MA$"Q-value (CD PSM)" < 0.1 | abs(JP_MA$"Coefficient (UC PSM)") > 0.8 & JP_MA$"Q-value (UC PSM)" < 0.1) -> PSM_cohort
+#Select species with abs coef>1 and FDR<0.1 in UC or CD
+JP_MA %>% filter(abs(JP_MA$"Coefficient (CD PSM)") > 1 & JP_MA$"Q-value (CD PSM)" < 0.1 | abs(JP_MA$"Coefficient (UC PSM)") > 1 & JP_MA$"Q-value (UC PSM)" < 0.1) -> PSM_cohort
 PSM_cohort %>% arrange(-PSM_cohort$"Coefficient (IBD PSM)") -> PSM_cohort2 
 column_to_rownames(PSM_cohort2, "Feature") -> PSM_cohort2
 
@@ -256,6 +256,10 @@ qval_UC_CD[is.na(qval_UC_CD)] <- 1
 
 Fig1 %>% select("Coefficient (IBD PSM)") -> Gram_coef_IBD
 Fig1 %>% select("Coefficient (UC PSM)", "Coefficient (CD PSM)") -> Gram_coef_UC_CD
+
+rename(.data= Gram_coef_IBD, "IBD PSM" = "Coefficient (IBD PSM)") -> Gram_coef_IBD
+rename(.data= Gram_coef_UC_CD, "UC PSM" = "Coefficient (UC PSM)") -> Gram_coef_UC_CD 
+rename(.data= Gram_coef_UC_CD, "CD PSM" = "Coefficient (CD PSM)") -> Gram_coef_UC_CD
 
 anno_width = unit(2, "cm")
 
@@ -273,7 +277,7 @@ sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_co
   geom_point() +
   theme_bw() +
   geom_smooth(method = "lm") +
-  labs(title = "PSM vs Main analysis", subtitle = "IBD", x = "Coefficient value (Japan)", y = "Coefficient value (Japan PSM)", tag = "") +
+  labs(title = "Main analysis vs PSM analysis", subtitle = "IBD", x = "Coefficient value (Main analysis)", y = "Coefficient value (PSM analysis)", tag = "") +
   theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
 sp_ibd <- sp + stat_cor(method = "spearman", label.x = -1, label.y = 1, cor.coef.name = c("rho"))
 
@@ -281,7 +285,7 @@ sp <- ggplot(All_country, aes(x = All_country$"Coefficient (UC JP)", y = All_cou
   geom_point() +
   theme_bw() +
   geom_smooth(method = "lm") +
-  labs(title = "PSM vs Main analysis", subtitle = "UC", x = "Coefficient value (Japan)", y = "Coefficient value (Japan PSM)", tag = "") +
+  labs(title = "Main analysis vs PSM analysis", subtitle = "UC", x = "Coefficient value (Main analysis)", y = "Coefficient value (PSM analysis)", tag = "") +
   theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
 sp_uc <- sp + stat_cor(method = "spearman", label.x = -1, label.y = 1, cor.coef.name = c("rho"))
 
@@ -289,7 +293,7 @@ sp <- ggplot(All_country, aes(x = All_country$"Coefficient (CD JP)", y = All_cou
   geom_point() +
   theme_bw() +
   geom_smooth(method = "lm") +
-  labs(title = "PSM vs Main analysis", subtitle = "CD", x = "Coefficient value (Japan)", y = "Coefficient value (Japan PSM)", tag = "") +
+  labs(title = "Main analysis vs PSM analysis", subtitle = "CD", x = "Coefficient value (Main analysis)", y = "Coefficient value (PSM analysis)", tag = "") +
   theme(plot.title = element_text(face = "bold", color = "black"), plot.tag  = element_text(face = "bold", color = "black", size =24))
 sp_cd <- sp + stat_cor(method = "spearman", label.x = -1, label.y = 1, cor.coef.name = c("rho"))
 

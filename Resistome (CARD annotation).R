@@ -207,7 +207,11 @@ lgd_list = list(Legend(labels = c("Positive", "Negative"), title = "Percentage o
 
 #Heatmap annotation of CARD to show species that possess the ARG (Sequence variance)
 ARG_Heat_qval %>% select("Coefficient (IBD JP)") -> ARG_coef_IBD
+rename(.data= ARG_coef_IBD, "IBD" = "Coefficient (IBD JP)") -> ARG_coef_IBD
+
 ARG_Heat_qval %>% select("Coefficient (UC JP)", "Coefficient (CD JP)") -> ARG_coef_UC_CD
+rename(.data= ARG_coef_UC_CD, "UC" = "Coefficient (UC JP)") -> ARG_coef_UC_CD
+rename(.data= ARG_coef_UC_CD, "CD" = "Coefficient (CD JP)") -> ARG_coef_UC_CD
 
 ARG_Heat_qval %>% select( "Q-value (IBD JP)") -> qval_IBD
 ARG_Heat_qval %>% select( "Q-value (UC JP)", "Q-value (CD JP)") -> qval_UC_CD

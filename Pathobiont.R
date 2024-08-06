@@ -144,6 +144,10 @@ Patho_input  %>% select("Coefficient (UC JP)" , "Coefficient (CD JP)") -> Patho_
 Patho_input  %>% select(Gram) -> Gram
 Patho_input  %>% select(Phylum) -> Phylum
 
+rename(.data= Patho_coef_IBD, "IBD" = "Coefficient (IBD JP)") -> Patho_coef_IBD
+rename(.data= Patho_coef_UC_CD, "UC" = "Coefficient (UC JP)") -> Patho_coef_UC_CD 
+rename(.data= Patho_coef_UC_CD, "CD" = "Coefficient (CD JP)") -> Patho_coef_UC_CD
+
 lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1 (MaAsLin)")
 
 ra = rowAnnotation("Phylum"=Patho_input$Phylum, "Gram staining"=Patho_input$Gram,  col=list(Phylum= c("Actinobacteria"="#03af7a", "Bacteroidetes" = "#c9ace6", "Firmicutes" = "#ff8082", "Proteobacteria" = "#804000", "Bacteria phylum incertae sedis" = "#ffff80", "Verrucomicrobia"="blue", "Fusobacteria"="#bfe4ff", "Synergistetes"="#ffca80", "Spirochaetes"="red", "Unknown"="#000000"), "Gram staining"= c("positive"="purple", "negative"="#ffcabf", "unknown"="#c8c8cb")), simple_anno_size = unit(3, "mm"), gp = gpar(col = "black"), annotation_name_gp= gpar(fontsize = 8))

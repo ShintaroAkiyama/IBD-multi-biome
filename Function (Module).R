@@ -4,6 +4,7 @@ library(tidyverse)
 library(Maaslin2)
 library(ggplot2)
 library(ggrepel)
+library(stringr)
 
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/MaAsLin/Module")
 Meta <- read.csv("Meta.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
@@ -135,15 +136,16 @@ Down_Hits = head(arrange(volcano_q, volcano_q$"Coefficient (UC JP)"),10)
 Hits=rbind(Up_Hits, Down_Hits)  
 volcano_q$label = if_else(volcano_q$feature %in% Hits$feature, volcano_q$feature, "") #Coef included in Top 10 and Bottom 10 are labeled.
 
-X <- 0.9
-Y <- 6 
+X <- 0
+Y <- 8 
 
 volcano_q %>% mutate(class = case_when(volcano_q$"Coefficient (UC JP)" >= X & log10q_UC >= 1 ~ "Increase", volcano_q$"Coefficient (UC JP)" <= -X & log10q_UC >= 1 ~ "Decrease", TRUE ~ "None")) -> volcano_q 
 volcano_q %>% mutate(class2 = case_when(volcano_q$"Coefficient (UC JP)" >= X & log10q_UC >= Y ~ "Increase", volcano_q$"Coefficient (UC JP)" <= -X & log10q_UC >= Y ~ "Decrease", TRUE ~ "None")) -> volcano_q
 volcano_q %>% filter(class2 == "Increase" | class2 == "Decrease") -> Hit2
 volcano_q$label = if_else(volcano_q$ID %in% Hit2$ID, volcano_q$ID, "")
+volcano_q$label <- str_sub(volcano_q$label, start = 8, end = -1) #Remove MO ID number
 
-ggplot(volcano_q, aes(x = `Coefficient (UC JP)`, y = log10q_UC, color=class, size=log10q_UC, label = rownames(ID))) +
+ggplot(volcano_q, aes(x = `Coefficient (UC JP)`, y = log10q_UC, color=class, size=log10q_UC, label = label)) +
   geom_vline(xintercept = c(-X, X), linetype =2, color="Grey") +
   geom_hline(yintercept = 1, linetype =2, color="Grey") +
   geom_point( alpha = .8) + 
@@ -182,15 +184,16 @@ Down_Hits = head(arrange(volcano_q, volcano_q$"Coefficient (CD JP)"),10)
 Hits=rbind(Up_Hits, Down_Hits)  
 volcano_q$label = if_else(volcano_q$ID %in% Hits$ID, volcano_q$ID, "") #Coef included in Top 10 and Bottom 10 are labeled.
 
-X <- 0.9
+X <- 0
 Y <- 8 
 
 volcano_q %>% mutate(class = case_when(volcano_q$"Coefficient (CD JP)" >= X & log10q_CD >= 1 ~ "Increase", volcano_q$"Coefficient (CD JP)" <= -X & log10q_CD >= 1 ~ "Decrease", TRUE ~ "None")) -> volcano_q  
-volcano_q %>% mutate(class2 = case_when(volcano_q$"Coefficient (CD JP)" >= X & log10q_CD >= 7 ~ "Increase", volcano_q$"Coefficient (CD JP)" <= -X & log10q_CD >= 12 ~ "Decrease", TRUE ~ "None")) -> volcano_q
+volcano_q %>% mutate(class2 = case_when(volcano_q$"Coefficient (CD JP)" >= X & log10q_CD >= 7.5 ~ "Increase", volcano_q$"Coefficient (CD JP)" <= -X & log10q_CD >= 12 ~ "Decrease", TRUE ~ "None")) -> volcano_q
 volcano_q %>% filter(class2 == "Increase" | class2 == "Decrease") -> Hit2
 volcano_q$label = if_else(volcano_q$ID %in% Hit2$ID, volcano_q$ID, "")　
+volcano_q$label <- str_sub(volcano_q$label, start = 8, end = -1) #Remove MO ID number
 
-ggplot(volcano_q, aes(x = `Coefficient (CD JP)`, y = log10q_CD, color=class, size=log10q_CD, label = rownames(ID))) +
+ggplot(volcano_q, aes(x = `Coefficient (CD JP)`, y = log10q_CD, color=class, size=log10q_CD, label = label)) +
   geom_vline(xintercept = c(-X, X), linetype =2, color="Grey") +
   geom_hline(yintercept = 1, linetype =2, color="Grey") +
   geom_point( alpha = .8) + 
@@ -204,7 +207,7 @@ ggplot(volcano_q, aes(x = `Coefficient (CD JP)`, y = log10q_CD, color=class, siz
                   segment.color = "grey50",
                   direction     = "y",
                   hjust         = 1,
-                  size = 7,
+                  size = 6,
                   color = "Black"
   ) +
   geom_text_repel(aes(label=label), data  = subset(volcano_q, `Coefficient (CD JP)` < -X),
@@ -213,7 +216,7 @@ ggplot(volcano_q, aes(x = `Coefficient (CD JP)`, y = log10q_CD, color=class, siz
                   segment.color = "grey50",
                   direction = "y",
                   hjust = 1,
-                  size = 7,
+                  size = 6,
                   color = "Black"
   ) +
   scale_x_continuous(

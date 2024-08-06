@@ -144,9 +144,9 @@ qval_UC_CD[is.na(qval_UC_CD)] <- 1
 KO_coef %>% select("Coefficient (IBD JP)") -> coef_IBD
 KO_coef %>% select("Coefficient (UC JP)", "Coefficient (CD JP)") ->  coef_UC_CD
 
-colnames(coef_IBD)[1] <- "MaAsLin (IBD vs HC)"
-colnames(coef_UC_CD)[1] <- "MaAsLin (UC vs HC)"
-colnames(coef_UC_CD)[2] <- "MaAsLin (CD vs HC)"
+colnames(coef_IBD)[1] <- "IBD"
+colnames(coef_UC_CD)[1] <- "UC"
+colnames(coef_UC_CD)[2] <- "CD"
 
 anno_width = unit(2, "cm")
 
@@ -180,9 +180,9 @@ qval_UC_CD[is.na(qval_UC_CD)] <- 1
 KO_coef %>% select("Coefficient (IBD JP)") -> coef_IBD
 KO_coef %>% select("Coefficient (UC JP)", "Coefficient (CD JP)") ->  coef_UC_CD
 
-colnames(coef_IBD)[1] <- "MaAsLin (IBD vs HC)"
-colnames(coef_UC_CD)[1] <- "MaAsLin (UC vs HC)"
-colnames(coef_UC_CD)[2] <- "MaAsLin (CD vs HC)"
+colnames(coef_IBD)[1] <- "IBD"
+colnames(coef_UC_CD)[1] <- "UC"
+colnames(coef_UC_CD)[2] <- "CD"
 
 anno_width = unit(2, "cm")
 
@@ -224,9 +224,9 @@ KO_coef %>% select("Coefficient (UC JP)", "Coefficient (CD JP)") ->  coef_UC_CD
 KO_coef  %>% select(AIEC) -> AIEC
 KO_coef  %>% select(Function) -> Function
 
-colnames(coef_IBD)[1] <- "MaAsLin (IBD vs HC)"
-colnames(coef_UC_CD)[1] <- "MaAsLin (UC vs HC)"
-colnames(coef_UC_CD)[2] <- "MaAsLin (CD vs HC)"
+colnames(coef_IBD)[1] <- "IBD"
+colnames(coef_UC_CD)[1] <- "UC"
+colnames(coef_UC_CD)[2] <- "CD"
 
 lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
 

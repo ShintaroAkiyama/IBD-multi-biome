@@ -403,10 +403,9 @@ pch3[!is_sig] = NA
 m_col_fun = colorRamp2(c(-2.5, 0, 2.5), c("navy", "white", "firebrick3")) 
 lgd_pvalue = Legend(title = "MaAsLin coef", col_fun = m_col_fun, at = c(-2.5, 0, 2.5), 
                     labels = c("-2.5", "0", "2.5"))
-lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1 (MaAsLin)")
-lgd_sig2 = Legend(pch = "*", type = "points", labels = "FDR-adjusted P value < 0.1(Spearman)")
+lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
 
-KO_ra <- HeatmapAnnotation("MaAsLin (UC vs HC)" = anno_simple(K_p$"Coefficient (UC JP)", col = m_col_fun, pch = pch2, simple_anno_size = unit(3,"mm"), gp = gpar(col = "black")), "MaAsLin (CD vs HC)" = anno_simple(K_p$"Coefficient (CD JP)", col = m_col_fun, pch = pch3, simple_anno_size = unit(3,"mm"), gp = gpar(col = "black")), "Function"=K_p$C, col=list(Function=c("Flagellar assembly [PATH:ko02040]" = "#ff4b00", "Lipopolysaccharide biosynthesis [PATH:ko00540]"="#fff100", "Peptidoglycan biosynthesis [PATH:ko00550]"="#03af7a")),  simple_anno_size = unit(3,"mm"), annotation_name_gp= gpar(fontsize = 8), gp = gpar(col = "black"))
+KO_ra <- HeatmapAnnotation("UC" = anno_simple(K_p$"Coefficient (UC JP)", col = m_col_fun, pch = pch2, simple_anno_size = unit(3,"mm"), gp = gpar(col = "black")), "CD" = anno_simple(K_p$"Coefficient (CD JP)", col = m_col_fun, pch = pch3, simple_anno_size = unit(3,"mm"), gp = gpar(col = "black")), "Function"=K_p$C, col=list(Function=c("Flagellar assembly [PATH:ko02040]" = "#ff4b00", "Lipopolysaccharide biosynthesis [PATH:ko00540]"="#fff100", "Peptidoglycan biosynthesis [PATH:ko00550]"="#03af7a")),  simple_anno_size = unit(3,"mm"), annotation_name_gp= gpar(fontsize = 8), gp = gpar(col = "black"))
 
 T_coef %>% select("Q-value (IBD JP)") -> qval_IBD
 T_coef %>% select("Q-value (UC JP)", "Q-value (CD JP)") -> qval_UC_CD
@@ -418,10 +417,10 @@ T_coef %>% select("Coefficient (UC JP)", "Coefficient (CD JP)") ->  coef_UC_CD
 data.frame(row.names = T_coef$feature, coef_IBD) -> coef_IBD_2
 data.frame(row.names = T_coef$feature, coef_UC_CD) -> coef_UC_CD2
 
-rename(.data = coef_UC_CD2, "MaAsLin (UC vs HC)" = "Coefficient..UC.JP.") -> coef_UC_CD2
-rename(.data = coef_UC_CD2, "MaAsLin (CD vs HC)" = "Coefficient..CD.JP.") -> coef_UC_CD2
+rename(.data = coef_UC_CD2, "UC" = "Coefficient..UC.JP.") -> coef_UC_CD2
+rename(.data = coef_UC_CD2, "CD" = "Coefficient..CD.JP.") -> coef_UC_CD2
 
 p2=pheatmap(as.matrix(coef_UC_CD2), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(qval_UC_CD<0.1,"*", ""), nrow(qval_UC_CD)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-2.5,0,2.5), c("navy", "white", "firebrick3")), name = "MaAsLin coef", heatmap_legend_param = list(color_bar = "continuous"))
 p3=pheatmap(as.matrix(T_rho), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(T_p <0.1,"*", ""), nrow(T_p)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-1,0,1), c("#03af7a", "white", "#f6aa00")), name = "Spearman rho", heatmap_legend_param = list(color_bar = "continuous"), column_title = "PAMPs", column_title_gp = gpar(fontsize = 10, fontface = "bold"), top_annotation = KO_ra)
 
-draw(p2+p3, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig, lgd_sig2)) 
+draw(p2+p3, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig)) 

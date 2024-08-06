@@ -32,9 +32,9 @@ ggplot(Shannon_SP, aes(Group, Shannon, fill = Group)) +
   labs(x = "", y = "Shannon for species") +
   scale_y_continuous(limits = c(0, 8.5)) +
   scale_x_discrete(limit=c("Controls","UC","CD"))+
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 18),
-        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 18),
-        text = element_text(size = 18)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 22),
+        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 22),
+        text = element_text(size = 22)) +
   annotate("text", x = 1.5, y = 8, label = "P < 0.001", size = 6, fontface = "plain") +
   geom_segment(x = 1, xend = 2, y = 7.8, yend = 7.8) +
   annotate("text", x = 2, y = 8.5, label = "P < 0.001", size = 6, fontface = "plain")+
@@ -110,11 +110,12 @@ data_phylo<-phyloseq(DATA, METADATA)
 bc=ordinate(data_phylo, method = "MDS", distane = "bray") #NMDSなど選べる
 plot_ordination(data_phylo, bc, color= "Group")+
   geom_point(size=3)+
+  theme_classic() +
   stat_ellipse() +
   labs(x = "MDS1", y = "MDS2") +
   scale_color_manual(values = c("royalblue","#84919e","red"))+
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 20),
-        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 20),
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 24),
+        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 24),
         axis.line = element_line(colour = "black", linewidth= 0.7, linetype = "solid"),
         legend.background = element_blank(),
         legend.key = element_blank(),
@@ -122,9 +123,9 @@ plot_ordination(data_phylo, bc, color= "Group")+
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
-        text = element_text(size = 20))+
+        text = element_text(size = 28))+
   guides(fill=guide_legend(title=NULL))+
-  annotate("text", x = 0.4, y = -0.35, label = "P = 1e-04", size = 8, fontface = "plain")
+  annotate("text", x = 0.4, y = -0.42, label = "P = 1e-04", size = 8, fontface = "plain")
 
 #Richness
 SP_input <- read.csv("SP_IBD_num.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) 
@@ -175,9 +176,9 @@ ggplot(Shannon_ARG, aes(Group, Shannon, fill = Group)) +
   labs(x = "", y = "Shannon for ARG") +
   scale_y_continuous(limits = c(0, 8)) +
   scale_x_discrete(limit=c("Controls","UC","CD"))+
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 18),
-        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 18),
-        text = element_text(size = 18)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 22),
+        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 22),
+        text = element_text(size = 22)) +
   guides(fill=guide_legend(title=NULL))
 
 #simpson
@@ -231,11 +232,12 @@ data_phylo<-phyloseq(DATA, METADATA)
 bc=ordinate(data_phylo, method = "MDS", distane = "bray") 
 plot_ordination(data_phylo, bc, color= "Group")+
   geom_point(size=3)+
+  theme_classic() +
   stat_ellipse() +
   labs(x = "MDS1", y = "MDS2") +
   scale_color_manual(values = c("royalblue","#84919e","red"))+
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 20),
-        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 20),
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 19),
+        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 19),
         axis.line = element_line(colour = "black", linewidth= 0.7, linetype = "solid"),
         legend.background = element_blank(),
         legend.key = element_blank(),
@@ -243,7 +245,7 @@ plot_ordination(data_phylo, bc, color= "Group")+
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
-        text = element_text(size = 20))+
+        text = element_text(size = 28))+
   guides(fill=guide_legend(title=NULL))+
   annotate("text", x = 0.4, y = -0.35, label = "P = 1e-04", size = 8, fontface = "plain")
 
@@ -301,9 +303,9 @@ ggplot(Shannon_vOTU, aes(Group, Shannon, fill = Group)) +
   labs(x = "", y = "Shannon for vOTU") +
   scale_y_continuous(limits = c(0, 8.5)) +
   scale_x_discrete(limit=c("Controls","UC","CD"))+
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 18),
-        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 18),
-        text = element_text(size = 18)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 22),
+        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 22),
+        text = element_text(size = 22)) +
   annotate("text", x = 1.5, y = 7.7, label = "P < 0.001", size = 6, fontface = "plain") +
   geom_segment(x = 1, xend = 2, y = 7.5, yend = 7.5) +
   annotate("text", x = 2, y = 8.2, label = "P < 0.001", size = 6, fontface = "plain")+
@@ -375,11 +377,12 @@ data_phylo<-phyloseq(DATA, METADATA)
 bc=ordinate(data_phylo, method = "MDS", distane = "bray") 
 plot_ordination(data_phylo, bc, color= "Group")+
   geom_point(size=3)+
+  theme_classic() +
   stat_ellipse() +
   labs(x = "MDS1", y = "MDS2") +
   scale_color_manual(values = c("royalblue","#84919e","red"))+
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 20),
-        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 20),
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 22),
+        axis.text.y = element_text(angle = 0, hjust = 0.5, size = 22),
         axis.line = element_line(colour = "black", linewidth= 0.7, linetype = "solid"),
         legend.background = element_blank(),
         legend.key = element_blank(),
@@ -387,7 +390,7 @@ plot_ordination(data_phylo, bc, color= "Group")+
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
-        text = element_text(size = 20))+
+        text = element_text(size = 28))+
   guides(fill=guide_legend(title=NULL))+
   annotate("text", x = 0.4, y = -0.35, label = "P = 1e-04", size = 8, fontface = "plain")
 
