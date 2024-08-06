@@ -1,4 +1,4 @@
-#ARG analysis with CARD annotation
+#ARG analysis with CARD annotation (Supplementary Figure 7)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
