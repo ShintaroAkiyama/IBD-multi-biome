@@ -12,7 +12,7 @@ Meta <- rename(Meta, Group = UC_CD)
 #rownames_to_column(Meta, "METAF") -> Meta #Only for alpha diversity, not for beta diversity
 METADATA=sample_data(Meta, errorIfNULL = TRUE)
 
-#alpa-diversity for bacterial species
+#alpa-diversity for bacterial species (Figure 1a, Supplementary Fig 1a-1b)
 #Shannon
 SP_input <- read.csv("SP_IBD.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) #abundance data
 SP_input2 <- SP_input[, -which (colnames(SP_input) %in% c("ID", "IBD", "UC", "CD"))] 
@@ -103,7 +103,7 @@ ggplot(Simpson_SP, aes(Group, Simpson, fill = Group)) +
   geom_segment(x = 2, xend = 3, y = 72, yend = 72)+
   guides(fill=guide_legend(title=NULL))
 
-#beta-diversity
+#beta-diversity (Figure 1b)
 adonis2(SP_input2~Group, data=Meta, permutation=9999, method="bray") #obtain p value for PERMANOVA
 
 data_phylo<-phyloseq(DATA, METADATA)
@@ -127,7 +127,7 @@ plot_ordination(data_phylo, bc, color= "Group")+
   guides(fill=guide_legend(title=NULL))+
   annotate("text", x = 0.4, y = -0.42, label = "P = 1e-04", size = 8, fontface = "plain")
 
-#Richness
+#Richness (Supplementary Fig 1c)
 SP_input <- read.csv("SP_IBD_num.csv", header = TRUE, na.strings = c(NA, ''), row.names=1) 
 SP_input2 <- SP_input[, -which (colnames(SP_input) %in% c("ID", "IBD", "UC", "CD"))] 
 rownames_to_column(SP_input2, "METAF") -> SP_input2
@@ -153,7 +153,7 @@ ggplot(Richness_SP, aes(Group, Richness, fill = Group)) +
   geom_segment(x = 2, xend = 3, y = 525, yend = 525)+
   guides(fill=guide_legend(title=NULL))
 
-#Diversity for ARG
+#Diversity for ARG (Figure 2a, Supplementary Fig 1d-1e)
 #Shannon
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Figure用解析/Bacteriome_all_results_for_pval/Diversity/Microbiome_diversity")
 Meta <- read.csv("Meta.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
@@ -225,7 +225,7 @@ ggplot(Simpson_ARG, aes(Group, Simpson, fill = Group)) +
         text = element_text(size = 18)) +
   guides(fill=guide_legend(title=NULL))
 
-#beta-diversity
+#beta-diversity (Figure 2b)
 adonis2(ARG_input2~Group, data=Meta, permutation=9999, method="bray") #obtain p value for PERMANOVA 
 
 data_phylo<-phyloseq(DATA, METADATA)
@@ -249,7 +249,7 @@ plot_ordination(data_phylo, bc, color= "Group")+
   guides(fill=guide_legend(title=NULL))+
   annotate("text", x = 0.4, y = -0.35, label = "P = 1e-04", size = 8, fontface = "plain")
 
-#Richness
+#Richness(Supplementary Fig 1f)
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Figure用解析/Bacteriome_all_results_for_pval/Diversity/Microbiome_diversity")
 Meta <- read.csv("Meta.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
 Meta <- rename(Meta, Group = UC_CD)
@@ -280,7 +280,7 @@ ggplot(Richness_SP, aes(Group, Number_of_ARG, fill = Group)) +
   geom_segment(x = 2, xend = 3, y = 165, yend = 165)+
   guides(fill=guide_legend(title=NULL))
 
-#Diversity for vOTU
+#Diversity for vOTU (Figure 3a, Supplementary Fig 1g-1h)
 #Shannon
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Figure用解析/Bacteriome_all_results_for_pval/Diversity/Microbiome_diversity")
 Meta <- read.csv("Meta.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
@@ -370,7 +370,7 @@ ggplot(Simpson_vOTU, aes(Group, Simpson, fill = Group)) +
   geom_segment(x = 2, xend = 3, y = 72, yend = 72)+
   guides(fill=guide_legend(title=NULL))
 
-#beta-diversity
+#beta-diversity (Figure 4b)
 adonis2(vOTU_input2~Group, data=Meta, permutation=9999, method="bray") 
 
 data_phylo<-phyloseq(DATA, METADATA)
@@ -394,7 +394,7 @@ plot_ordination(data_phylo, bc, color= "Group")+
   guides(fill=guide_legend(title=NULL))+
   annotate("text", x = 0.4, y = -0.35, label = "P = 1e-04", size = 8, fontface = "plain")
 
-#Richness 
+#Richness (Supplementary Fig 1i)
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Figure用解析/Bacteriome_all_results_for_pval/Diversity/Microbiome_diversity")
 Meta <- read.csv("Meta.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
 Meta <- rename(Meta, Group = UC_CD)
@@ -424,29 +424,3 @@ ggplot(Richness_SP, aes(Group, Richness, fill = Group)) +
   #annotate("text", x = 2.5, y = 180, label = "P = 0.02", size = 6, fontface = "plain")+
   #geom_segment(x = 2, xend = 3, y = 165, yend = 165)+
   guides(fill=guide_legend(title=NULL))
-
-#Box-and-whisker plots for alpha-diversity to calculate p-values
-#SP
-#Shannon
-ggbetweenstats(plot.type = "box", data = Shannon_SP, x = Group, y = Shannon, type = "nonparametirc", title = "alpha-diversity", 
-               centrality.plotting = TRUE,  
-               centrality.point.args = list(size = 2, color = "darkred"), 
-               centrality.label.args = list(size = 1, nudge_x = 0.5, segment.linetype = 2, min.segment.length = 0),
-               ggplot.component = list(theme(text=element_text(size=10))),
-               results.subtitle = TRUE)
-
-#ARG
-ggbetweenstats(plot.type = "box", data = Shannon_ARG, x = Group, y = Shannon, type = "nonparametirc", title = "alpha-diversity", 
-               centrality.plotting = TRUE,  
-               centrality.point.args = list(size = 2, color = "darkred"), 
-               centrality.label.args = list(size = 1, nudge_x = 0.5, segment.linetype = 2, min.segment.length = 0),
-               ggplot.component = list(theme(text=element_text(size=10))),
-               results.subtitle = TRUE)
-
-#vOTU
-ggbetweenstats(plot.type = "box", data = Shannon_vOTU, x = Group, y = Shannon, type = "nonparametirc", title = "alpha-diversity", 
-               centrality.plotting = TRUE,  
-               centrality.point.args = list(size = 2, color = "darkred"), 
-               centrality.label.args = list(size = 1, nudge_x = 0.5, segment.linetype = 2, min.segment.length = 0),
-               ggplot.component = list(theme(text=element_text(size=10))),
-               results.subtitle = TRUE)
