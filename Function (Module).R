@@ -1,4 +1,4 @@
-#Function (Module) analysis of bacteriome
+#Function (Module) analysis of bacteriome (Figure 3a,3b)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
@@ -129,7 +129,7 @@ Feature<- read.csv("Feature.csv", header = TRUE, na.strings = c(NA, ''), row.nam
 rownames_to_column(Feature, "feature") -> Feature
 inner_join(JP_MA, Feature, by = "feature") -> volcano
 
-#Volcano plot creation for UC
+#Volcano plot creation for UC (Figure 3a)
 volcano %>% mutate(log10q_IBD = -log10(volcano$"Q-value (IBD JP)"), log10q_UC = -log10(volcano$"Q-value (UC JP)"), log10q_CD = -log10(volcano$"Q-value (CD JP)"))-> volcano_q
 Up_Hits = head(arrange(volcano_q, -volcano_q$"Coefficient (UC JP)"),10)
 Down_Hits = head(arrange(volcano_q, volcano_q$"Coefficient (UC JP)"),10)
@@ -177,7 +177,7 @@ ggplot(volcano_q, aes(x = `Coefficient (UC JP)`, y = log10q_UC, color=class, siz
   ) +
   theme(text = element_text(size = 25))
 
-#Volcano plot creation for CD
+#Volcano plot creation for CD (Figure 3b)
 volcano %>% mutate(log10q_IBD = -log10(volcano$"Q-value (IBD JP)"), log10q_UC = -log10(volcano$"Q-value (UC JP)"), log10q_CD = -log10(volcano$"Q-value (CD JP)"))-> volcano_q
 Up_Hits = head(arrange(volcano_q, -volcano_q$"Coefficient (CD JP)"),10)
 Down_Hits = head(arrange(volcano_q, volcano_q$"Coefficient (CD JP)"),10)
