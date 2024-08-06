@@ -1,4 +1,4 @@
-#Correlation analysis between resistome (ARGs) and bacterial species
+#Correlation analysis between resistome (ARGs) and bacterial species (Figure 2e)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
