@@ -1,4 +1,4 @@
-# Analysis of bacteriome in patients on TNF inhibitors
+# Analysis of bacteriome in patients w/o TNF inhibitors (Supplementary Figure 5)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
@@ -6,7 +6,7 @@ library(ComplexHeatmap)
 library(ggpubr)
 library(ggstatsplot)
 
-#4D JP cohort
+#4D JP cohort (all patients)
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/SP_mOTU3_JP") 
 #UCvsControl
 Meta <- read.csv("Meta.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
@@ -110,7 +110,7 @@ rename(.data=JP_maaslin_IBD, "Q-value (IBD JP)" = "qval") -> JP_maaslin_IBD
 JP_MA <- full_join(full_join(JP_maaslin_IBD, JP_maaslin_UC, by = "feature"), JP_maaslin_CD, by = "feature")
 JP_MA %>% mutate(ID = str_sub(JP_MA$feature, start = -6, end = -2)) -> JP_MA
 
-#For TNF/Immunomodulators
+#Patients w/o TNF/Immunomodulators
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/MaAsLin/SP_mOTU3(METAFは番号に修正済みIBD症状薬剤解析)")
 #UCvsControl
 Meta <- read.csv("Meta.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
@@ -241,7 +241,7 @@ JP_MA_TNF %>% mutate(ID = str_sub(JP_MA_TNF$feature, start = -6, end = -2)) -> J
 
 JP_MA2 <- full_join(JP_MA, JP_MA_TNF, by = "ID")
 
-#Spearman scatter plots
+#Spearman scatter plots (Supplementary Figure 5b)
 sp <- ggplot(JP_MA2, aes(x = JP_MA2$"Coefficient (IBD JP)", y = JP_MA2$"Coefficient (IBD w/o TNF/IM)")) +
   geom_point() +
   theme_bw() +
@@ -275,7 +275,7 @@ combine_plots(
   )
 )
 
-#Heatmap creation
+#Heatmap creation (Supplementary Figure 5a)
 #Select species with abs coef >1 and FDR<0.1 in UC or CD 
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/mOTU3_original_data")
 ID <- read.csv("Feature.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
