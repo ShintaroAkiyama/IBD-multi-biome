@@ -1,4 +1,4 @@
-#Correlation analysis (PAMPS vs bacterial species)
+#Correlation analysis (PAMPS vs bacterial species, Supplementary Figure 8a)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
