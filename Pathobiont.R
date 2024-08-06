@@ -1,4 +1,4 @@
-# Bacteriome (Pathobiont) analysis 
+# Bacteriome (Pathobiont) analysis (Figure 1e)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
