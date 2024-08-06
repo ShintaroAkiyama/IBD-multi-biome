@@ -1,4 +1,4 @@
-# Bacteriome (Genus) analysis 
+# Bacteriome (Genus) analysis (Supplementary Figure 9)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
