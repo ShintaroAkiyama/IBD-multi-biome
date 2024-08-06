@@ -1,4 +1,4 @@
-#Correlation analysis (AIEC virulence factors vs bacterial species)
+#Correlation analysis (AIEC virulence factors vs bacterial species, Supplementary Figure 8b)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
