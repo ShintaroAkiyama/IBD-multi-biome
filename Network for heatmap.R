@@ -4,7 +4,7 @@ library(NetCoMi)
 library(ComplexHeatmap)
 library(progress)
 
-#UC analysis
+#UC analysis (Figure 5d)
 #Bacteria list
 #SP_input2_bacteriome from bacteriome analysis including bacterial species with abs coef >1 and FDR<0.1 in UC or CD
 rownames_to_column(SP_input2_bacteriome, "feature") -> SP_input2_bacteriome 
@@ -691,7 +691,7 @@ p =pheatmap(as.matrix(all_df), fontsize = 5, cellwidth = 8, cellheight = 8, clus
 draw(p, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig)) 
 
 
-#CD analysis
+#CD analysis (Figure 5e)
 #Bacteria list
 #SP_input2_bacteriome from bacteriome analysis including bacterial species with abs coef >1 and FDR<0.1 in UC or CD
 rownames_to_column(SP_input2_bacteriome, "feature") -> SP_input2_bacteriome 
