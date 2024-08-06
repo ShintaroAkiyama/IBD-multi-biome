@@ -1,4 +1,4 @@
-#Propensity score matching analysis
+#Propensity score matching analysis (Supplementary Figure 4)
 library(dplyr)
 library(tidyverse)
 library(ComplexHeatmap)
@@ -239,7 +239,7 @@ ID <- read.csv("Feature.csv", header = TRUE, na.strings = c(NA, ''), row.names=1
 JP_MA %>% mutate(ID = as.numeric(JP_MA$ID)) -> JP_MA
 JP_MA <- full_join(JP_MA, ID, by ="ID")
 
-#Heatmap creation
+#Heatmap creation (Supplementary Figure 4a)
 #Select species with abs coef>1 and FDR<0.1 in UC or CD
 JP_MA %>% filter(abs(JP_MA$"Coefficient (CD PSM)") > 1 & JP_MA$"Q-value (CD PSM)" < 0.1 | abs(JP_MA$"Coefficient (UC PSM)") > 1 & JP_MA$"Q-value (UC PSM)" < 0.1) -> PSM_cohort
 PSM_cohort %>% arrange(-PSM_cohort$"Coefficient (IBD PSM)") -> PSM_cohort2 
@@ -270,7 +270,7 @@ p2=pheatmap(as.matrix(Gram_coef_UC_CD), fontsize = 5, cellwidth = 8, cellheight 
 
 draw(p1+p2, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
 
-#Spearman correlation analysis to compare the PSM and main analysis. 
+#Spearman correlation analysis to compare the PSM and main analysis (Supplementary Figure 4b)
 full_join(All_country, JP_MA, by = "ID") -> All_country #This dataframe is originated from the prior main analysis (Ref. Bacteriome.R)
 
 sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_country$"Coefficient (IBD PSM)")) +
