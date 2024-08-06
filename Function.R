@@ -1,4 +1,4 @@
-# Function analysis of bacteriome
+# Function analysis of bacteriome (Figure 3c-3h)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
@@ -128,6 +128,7 @@ KEGG_input <- read.csv("220430_KEGG_56700.csv", header = TRUE, na.strings = c(NA
 rename(.data=KEGG_input, "feature" = "k") -> KEGG_input
 left_join(KEGG_input, JP_MA, by = "feature") -> KO_coef
 
+#Select KOs with abs coef>1 and FDR<0.1 in UC or CD in the specific pathmay (Figure 3c-3d)
 KO_coef %>% filter(abs(KO_coef$"Coefficient (CD JP)") > 1 & KO_coef$"Q-value (CD JP)" < 0.1 | abs(KO_coef$"Coefficient (UC JP)") > 1 & KO_coef$"Q-value (UC JP)" < 0.1) -> KO_coef 
 KO_coef %>% filter(KO_coef$C=="Terpenoid backbone biosynthesis [PATH:ko00900]") -> KO_coef #"Cationic antimicrobial peptide (CAMP) resistance [PATH:ko01503]", "N-Glycan biosynthesis [PATH:ko00510]", "Glycosaminoglycan degradation [PATH:ko00531]" can be selected.
 KO_coef %>% arrange(-KO_coef$"Coefficient (IBD JP)") -> KO_coef
@@ -158,7 +159,7 @@ p2=pheatmap(as.matrix(coef_UC_CD), fontsize = 5, cellwidth = 8, cellheight = 8, 
 
 draw(p1+p2, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
 
-#PAMPS analysis
+#PAMPS analysis (Figure 3g)
 KEGG_input <- read.csv("220430_KEGG_56700.csv", header = TRUE, na.strings = c(NA, '')) #KEGG list
 rename(.data=KEGG_input, "feature" = "k") -> KEGG_input
 left_join(KEGG_input, JP_MA, by = "feature") -> KO_coef
@@ -195,7 +196,7 @@ ra = rowAnnotation("Function"=KO_coef$C, col=list(Function=c("Flagellar assembly
 
 draw(ra+p1+p2, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
 
-#AIEC virulence factor analysis
+#AIEC virulence factor analysis (Figure 3h)
 KEGG_input <- read.csv("220430_KEGG_56700.csv", header = TRUE, na.strings = c(NA, '')) #KEGG list
 rename(.data=KEGG_input, "feature" = "k") -> KEGG_input
 left_join(KEGG_input, JP_MA, by = "feature") -> KO_coef
