@@ -122,6 +122,10 @@ qval_UC_CD[is.na(qval_UC_CD)] <- 1
 Fig1 %>% select("Coefficient (IBD JP)") -> Gram_coef_IBD
 Fig1 %>% select("Coefficient (UC JP)", "Coefficient (CD JP)") -> Gram_coef_UC_CD
 
+rename(.data= Gram_coef_IBD, "IBD" = "Coefficient (IBD JP)") -> Gram_coef_IBD
+rename(.data= Gram_coef_UC_CD, "UC" = "Coefficient (UC JP)") -> Gram_coef_UC_CD 
+rename(.data= Gram_coef_UC_CD, "CD" = "Coefficient (CD JP)") -> Gram_coef_UC_CD
+
 anno_width = unit(2, "cm")
 
 lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
