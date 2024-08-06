@@ -1,4 +1,4 @@
-# Analysis of bacteriome in patients with active symptoms
+# Analysis of bacteriome in patients w/o active symptoms (Supplementary Figure 6)
 library(dplyr)
 library(tidyverse)
 library(Maaslin2)
@@ -6,7 +6,7 @@ library(ComplexHeatmap)
 library(ggpubr)
 library(ggstatsplot)
 
-#4D JP cohort
+#4D JP cohort (all patients)
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/SP_mOTU3_JP") 
 #UCvsControl
 Meta <- read.csv("Meta.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
@@ -238,7 +238,7 @@ JP_MA_sym %>% mutate(ID = str_sub(JP_MA_sym$feature, start = -6, end = -2)) -> J
 
 JP_MA2 <- full_join(JP_MA, JP_MA_sym, by = "ID")
 
-#Spearman scatter plots
+#Spearman scatter plots (Supplementary Figure 6b)
 sp <- ggplot(JP_MA2, aes(x = JP_MA2$"Coefficient (IBD JP)", y = JP_MA2$"Coefficient (IBD w/o symptoms)")) +
   geom_point() +
   theme_bw() +
@@ -272,7 +272,7 @@ combine_plots(
   )
 )
 
-#Heatmap creation
+#Heatmap creation (Supplementay Figure 6a)
 #Select species with abs coef >1 and FDR<0.1 in UC or CD 
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/mOTU3_original_data")
 ID <- read.csv("Feature.csv", header = TRUE, na.strings = c(NA, ''), row.names=1)
@@ -303,13 +303,13 @@ Fig1 %>% select("Coefficient (CD JP)", "Coefficient (CD w/o symptoms)") -> Gram_
 anno_width = unit(2, "cm")
 
 rename(.data= Gram_coef_IBD, "All IBD" = "Coefficient (IBD JP)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "IBD w/o symptoms" = "Coefficient (IBD w/o symptoms)") -> Gram_coef_IBD #Franzosa_2018
+rename(.data= Gram_coef_IBD, "IBD w/o symptoms" = "Coefficient (IBD w/o symptoms)") -> Gram_coef_IBD 
 
 rename(.data= Gram_coef_UC, "All UC" = "Coefficient (UC JP)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC w/o symptoms" = "Coefficient (UC w/o symptoms)") -> Gram_coef_UC #Franzosa_2018
+rename(.data= Gram_coef_UC, "UC w/o symptoms" = "Coefficient (UC w/o symptoms)") -> Gram_coef_UC 
 
 rename(.data= Gram_coef_CD, "All CD" = "Coefficient (CD JP)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD w/o symptoms" = "Coefficient (CD w/o symptoms)") -> Gram_coef_CD #Franzosa_2018
+rename(.data= Gram_coef_CD, "CD w/o symptoms" = "Coefficient (CD w/o symptoms)") -> Gram_coef_CD 
 
 lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
 
