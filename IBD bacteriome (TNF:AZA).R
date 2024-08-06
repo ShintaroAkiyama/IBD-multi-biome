@@ -306,13 +306,13 @@ Fig1 %>% select("Coefficient (CD JP)", "Coefficient (CD w/o TNF/IM)") -> Gram_co
 anno_width = unit(2, "cm")
 
 rename(.data= Gram_coef_IBD, "All IBD" = "Coefficient (IBD JP)") -> Gram_coef_IBD
-rename(.data= Gram_coef_IBD, "IBD w/o TNF/AZA" = "Coefficient (IBD w/o TNF/IM)") -> Gram_coef_IBD #Franzosa_2018
+rename(.data= Gram_coef_IBD, "IBD w/o TNF/AZA" = "Coefficient (IBD w/o TNF/IM)") -> Gram_coef_IBD 
 
 rename(.data= Gram_coef_UC, "All UC" = "Coefficient (UC JP)") -> Gram_coef_UC
-rename(.data= Gram_coef_UC, "UC w/o TNF/AZA" = "Coefficient (UC w/o TNF/IM)") -> Gram_coef_UC #Franzosa_2018
+rename(.data= Gram_coef_UC, "UC w/o TNF/AZA" = "Coefficient (UC w/o TNF/IM)") -> Gram_coef_UC 
 
 rename(.data= Gram_coef_CD, "All CD" = "Coefficient (CD JP)") -> Gram_coef_CD
-rename(.data= Gram_coef_CD, "CD w/o TNF/AZA" = "Coefficient (CD w/o TNF/IM)") -> Gram_coef_CD #Franzosa_2018
+rename(.data= Gram_coef_CD, "CD w/o TNF/AZA" = "Coefficient (CD w/o TNF/IM)") -> Gram_coef_CD 
 
 lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
 
