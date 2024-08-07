@@ -37,7 +37,7 @@ SP_input <- read.csv("SP_IBD.csv", header = TRUE, na.strings = c(NA, ''), row.na
 rownames_to_column(SP_input, "ID") ->SP_input
 SP_input %>% filter(SP_input$IBD ==2) -> SP_input #For Cont
 SP_input %>% mutate(ID = as.numeric(SP_input$ID)) -> SP_input
-NO <- SP_input%>%dplyr::select(ID) #UC vs Cont is selected.
+NO <- SP_input%>%dplyr::select(ID) #Cont is selected.
 rename(.data=NO, "NO" = "ID") -> NO
 SP_input2 <- SP_input[, -which (colnames(SP_input) %in% c("METAF", "IBD", "UC", "CD"))] 
 column_to_rownames(SP_input2, "ID") -> SP_input2
@@ -66,7 +66,7 @@ F_input <- read.csv("feces_230925.eukaryote.csv", header = TRUE, na.strings = c(
 as.data.frame(t(F_input)) -> F_input
 rownames_to_column(F_input, var = "NO") -> F_input
 F_input %>% mutate(NO = as.numeric(F_input$NO)) -> F_input
-left_join(NO, F_input, by = "NO") -> F_input #Select UC vs Cont
+left_join(NO, F_input, by = "NO") -> F_input #Cont is selected
 column_to_rownames(F_input, "NO") -> F_input
 F_input <- as.data.frame(t(F_input)) 
 rownames_to_column(F_input, "feature") -> F_input
@@ -357,7 +357,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from NL data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -383,7 +383,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from NL data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -408,7 +408,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from NL data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -529,7 +529,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from ES data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -555,7 +555,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from ES data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -580,7 +580,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from ES data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -640,7 +640,7 @@ net2 <- netConstruct(SparData, #relative abundance
                                        rep.num=10),　
                      normMethod = "none",
                      sparsMethod = "none", #sparsMethod = "threshhold", thresh = 0.01
-                     sampleSize = 62,  #要確認
+                     sampleSize = 62,  
                      dissFunc = "signed",
                      verbose = 2,
                      seed = 123456)
@@ -687,7 +687,7 @@ rename(.data = all_df_fdr, "NL cohort" = "Coefficient_Franzosa_Netherlands") -> 
 rename(.data = all_df_fdr, "ES cohort" = "Coefficient_Nielsen_Spain") -> all_df_fdr
 
 lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
-p =pheatmap(as.matrix(all_df), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(all_df_fdr != 0,"*", ""), nrow(all_df_fdr)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.5,0,1), c("navy", "white", "firebrick3")), name = "Spearman rho", heatmap_legend_param = list(color_bar = "continuous"), column_title = "Correlations between UC-related species", column_title_gp = gpar(fontsize = 10, fontface = "bold"))
+p =pheatmap(as.matrix(all_df), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(all_df_fdr != 0,"*", ""), nrow(all_df_fdr)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.5,0,1), c("navy", "white", "firebrick3")), name = "Spearman rho", heatmap_legend_param = list(color_bar = "continuous"), column_title = "Correlations between UC-related microbial markers", column_title_gp = gpar(fontsize = 10, fontface = "bold"))
 draw(p, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig)) 
 
 
@@ -724,7 +724,7 @@ SP_input <- read.csv("SP_IBD.csv", header = TRUE, na.strings = c(NA, ''), row.na
 rownames_to_column(SP_input, "ID") ->SP_input
 SP_input %>% filter(SP_input$IBD ==2) -> SP_input #For Cont
 SP_input %>% mutate(ID = as.numeric(SP_input$ID)) -> SP_input
-NO <- SP_input%>%dplyr::select(ID) #CD vs Cont is selected.
+NO <- SP_input%>%dplyr::select(ID) #Cont is selected.
 rename(.data=NO, "NO" = "ID") -> NO
 SP_input2 <- SP_input[, -which (colnames(SP_input) %in% c("METAF", "IBD", "UC", "CD"))] 
 column_to_rownames(SP_input2, "ID") -> SP_input2
@@ -753,7 +753,7 @@ F_input <- read.csv("feces_230925.eukaryote.csv", header = TRUE, na.strings = c(
 as.data.frame(t(F_input)) -> F_input
 rownames_to_column(F_input, var = "NO") -> F_input
 F_input %>% mutate(NO = as.numeric(F_input$NO)) -> F_input
-left_join(NO, F_input, by = "NO") -> F_input #Select CD vs Cont
+left_join(NO, F_input, by = "NO") -> F_input #Cont is selected
 column_to_rownames(F_input, "NO") -> F_input
 F_input <- as.data.frame(t(F_input)) 
 rownames_to_column(F_input, "feature") -> F_input
@@ -1087,7 +1087,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from NL data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1113,7 +1113,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from NL data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1138,7 +1138,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from NL data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1281,7 +1281,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from ES data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1307,7 +1307,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from ES data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1332,7 +1332,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from ES data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1442,7 +1442,6 @@ lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
 p_ESc=pheatmap(as.matrix(col), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(col_fdr >0 | col_fdr<0,"*", ""), nrow(col_fdr)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.5,0,1), c("navy", "white", "firebrick3")), name = "Spearman rho", heatmap_legend_param = list(color_bar = "continuous"), column_title = "Correlations of CD-related multibiome (ES cohort)", column_title_gp = gpar(fontsize = 10, fontface = "bold"))
 draw(p_ESc, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig)) 
 
-
 #External dataset4
 #Repeat from here
 SP_input2_bacteriome %>% filter(abs(SP_input2_bacteriome$"Coefficient (CD JP)") > 1 & SP_input2_bacteriome$"Q-value (CD JP)" < 0.1) -> SP_input2_bacteriome2 #For CD 
@@ -1478,7 +1477,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from CN data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1504,7 +1503,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from CN data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1529,7 +1528,7 @@ WO3 <- full_join(SP_WO3, Meta_WO3, by ="sample_id")
 #Select Study
 WO3 %>% filter(WO3$study == X & WO3$geographic_location == Y) -> US2 #timepoint=0がall 
 US2 %>% distinct(subject_id, .keep_all=TRUE) -> US2 #remove duplicates
-US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from US data
+US2 %>% filter(US2$disease == "Control") -> US2 #Select Cont from CN data
 US2_SP <- US2[, -which (colnames(US2) %in% c("subject_id", "environment_material", "timepoint", 
                                              "Sex", "Age", "geographic_location", "disease", "study", "publications", "environment_feature", "collection_date", "intervention", "weight_kg", 
                                              "height_cm", "bmi", "diet", "smoker", "antibiotic", "bristol_stool_scale"))] 
@@ -1657,7 +1656,7 @@ rename(.data = all_df_fdr, "ES cohort" = "Coefficient_Nielsen_Spain") -> all_df_
 rename(.data = all_df_fdr, "CN cohort" = "Coefficient_He_China") -> all_df_fdr
 
 lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
-p =pheatmap(as.matrix(all_df), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(all_df_fdr != 0,"*", ""), nrow(all_df_fdr)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.5,0,1), c("navy", "white", "firebrick3")), name = "Spearman rho", heatmap_legend_param = list(color_bar = "continuous"), column_title = "Correlations of CD-related species", column_title_gp = gpar(fontsize = 10, fontface = "bold"))
+p =pheatmap(as.matrix(all_df), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(all_df_fdr != 0,"*", ""), nrow(all_df_fdr)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-0.5,0,1), c("navy", "white", "firebrick3")), name = "Spearman rho", heatmap_legend_param = list(color_bar = "continuous"), column_title = "Correlations of CD-related microbial markers", column_title_gp = gpar(fontsize = 10, fontface = "bold"))
 draw(p, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig)) 
 
 #Script double check done (7/28/2024)
