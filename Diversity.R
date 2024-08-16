@@ -107,7 +107,7 @@ ggplot(Simpson_SP, aes(Group, Simpson, fill = Group)) +
 adonis2(SP_input2~Group, data=Meta, permutation=9999, method="bray") #obtain p value for PERMANOVA
 
 data_phylo<-phyloseq(DATA, METADATA)
-bc=ordinate(data_phylo, method = "MDS", distane = "bray") #NMDSなど選べる
+bc=ordinate(data_phylo, method = "MDS", distance = "bray") #NMDSなど選べる
 plot_ordination(data_phylo, bc, color= "Group")+
   geom_point(size=3)+
   theme_classic() +
@@ -229,7 +229,7 @@ ggplot(Simpson_ARG, aes(Group, Simpson, fill = Group)) +
 adonis2(ARG_input2~Group, data=Meta, permutation=9999, method="bray") #obtain p value for PERMANOVA 
 
 data_phylo<-phyloseq(DATA, METADATA)
-bc=ordinate(data_phylo, method = "MDS", distane = "bray") 
+bc=ordinate(data_phylo, method = "MDS", distance = "bray") 
 plot_ordination(data_phylo, bc, color= "Group")+
   geom_point(size=3)+
   theme_classic() +
@@ -374,7 +374,7 @@ ggplot(Simpson_vOTU, aes(Group, Simpson, fill = Group)) +
 adonis2(vOTU_input2~Group, data=Meta, permutation=9999, method="bray") 
 
 data_phylo<-phyloseq(DATA, METADATA)
-bc=ordinate(data_phylo, method = "MDS", distane = "bray") 
+bc=ordinate(data_phylo, method = "MDS", distance = "bray") 
 plot_ordination(data_phylo, bc, color= "Group")+
   geom_point(size=3)+
   theme_classic() +
