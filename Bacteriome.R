@@ -666,7 +666,7 @@ MaAsLin_IBD = if_else(All_country$"Q-value (IBD JP)" < 0.1, All_country[,"Featur
 MaAsLin_UC =if_else(All_country$"Q-value (UC JP)" < 0.1, All_country[,"Feature"], NA) %>% na.omit
 MaAsLin_CD =if_else(All_country$"Q-value (CD JP)" < 0.1, All_country[,"Feature"], NA) %>% na.omit
 
-LASSO_IBD =if_else(All_country$"LASSO (coefficient IBD)" > 0.1, c(All_country$"Feature"), NA)%>% na.omit #fearture importance >0.1
+LASSO_IBD =if_else(All_country$"LASSO (coefficient IBD)" > 0.1, All_country[,"Feature"], NA)%>% na.omit #fearture importance >0.1
 LASSO_UC =if_else(All_country$"LASSO (coefficient UC)" > 0.1, All_country[,"Feature"], NA)%>% na.omit #feature importance >0.1
 LASSO_CD =if_else(All_country$"LASSO (coefficient CD)" > 0.1, All_country[,"Feature"], NA)%>% na.omit #feature importance >0.1
 
