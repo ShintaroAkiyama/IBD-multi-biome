@@ -641,7 +641,7 @@ p3=pheatmap(as.matrix(Gram_coef_CD), fontsize = 5, cellwidth = 8, cellheight = 8
 
 draw(p1+p2+p3, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
 
-#Combine LASSO data (Supplementary Figure 2)
+#Combine LASSO data (Supplementary Figure 3)
 setwd("/Users/akiyama/Documents/筑波大学/筑波大学研究/プロジェクト/Microbiome共同研究/Manuscript/Nat Com/Revised/mOTU3_original_data")
 LASSO_IBD<- read.csv("LASSO_IBD.Japanese_4D.feature_importance.csv", header = TRUE, na.strings = c(NA, ''))
 LASSO_UC<- read.csv("LASSO_UC.Japanese_4D.feature_importance.csv", header = TRUE, na.strings = c(NA, ''))
@@ -660,7 +660,76 @@ LASSO <- full_join(full_join(LASSO_IBD, LASSO_UC, by = "ID"), LASSO_CD, by = "ID
 LASSO %>% mutate(ID = as.numeric(LASSO$ID)) -> LASSO
 All_country <- full_join(All_country, LASSO, by = "ID")
 
-#Venn diagram
+#Common species between LASSO & MaAsLin in all countries (Supplmentary Figure 3d-f)
+All_country %>% filter(All_country$"Q-value (IBD JP)" < 0.1 & All_country$"LASSO (coefficient IBD)" > 0.1) -> SP_input
+All_country %>% filter(All_country$"Q-value (UC JP)" < 0.1 & All_country$"LASSO (coefficient UC)" > 0.1) -> SP_input_UC
+All_country %>% filter(All_country$"Q-value (CD JP)" < 0.1 & All_country$"LASSO (coefficient CD)" > 0.1) -> SP_input_CD
+
+SP_input %>% arrange(-SP_input$"Coefficient (IBD JP)") -> SP_input2
+SP_input_UC %>% arrange(-SP_input_UC$"Coefficient (UC JP)") -> SP_input3
+SP_input_CD %>% arrange(-SP_input_CD$"Coefficient (CD JP)") -> SP_input4
+
+column_to_rownames(SP_input2, "Feature") -> SP_input2_bacteriome
+column_to_rownames(SP_input3, "Feature") -> SP_input3_bacteriome
+column_to_rownames(SP_input4, "Feature") -> SP_input4_bacteriome
+
+SP_input2_bacteriome %>% select("Coefficient (IBD JP)", "P-value (IBD JP)", "Q-value (IBD JP)", 
+                                "Coefficient (IBD US2)", "P-value (IBD US2)", "Q-value (IBD US2)", 
+                                "Coefficient (IBD Spain)", "P-value (IBD Spain)", "Q-value (IBD Spain)", 
+                                "Coefficient (IBD Netherlands)", "P-value (IBD Netherlands)", "Q-value (IBD Netherlands)") ->  Fig1 
+
+SP_input3_bacteriome %>% select("Coefficient (UC JP)", "P-value (UC JP)", "Q-value (UC JP)", 
+                                "Coefficient (UC US2)", "P-value (UC US2)",  "Q-value (UC US2)", 
+                                "Coefficient (UC Spain)", "P-value (UC Spain)", "Q-value (UC Spain)", 
+                                "Coefficient (UC Netherlands)", "P-value (UC Netherlands)", "Q-value (UC Netherlands)") ->  Fig1_UC
+
+SP_input4_bacteriome %>% select("Coefficient (CD JP)", "P-value (CD JP)", "Q-value (CD JP)", 
+                                "Coefficient (CD US2)", "P-value (CD US2)", "Q-value (CD US2)", 
+                                "Coefficient (CD Spain)", "P-value (CD Spain)", "Q-value (CD Spain)", 
+                                "Coefficient (CD Netherlands)", "P-value (CD Netherlands)", "Q-value (CD Netherlands)",  
+                                "Coefficient (CD China)", "P-value (CD China)", "Q-value (CD China)") ->  Fig1_CD
+
+Fig1 %>% select("Q-value (IBD JP)", "Q-value (IBD US2)", "Q-value (IBD Spain)", "Q-value (IBD Netherlands)") -> qval_IBD
+Fig1_UC %>% select("Q-value (UC JP)",  "Q-value (UC US2)", "Q-value (UC Spain)", "Q-value (UC Netherlands)") -> qval_UC
+Fig1_CD %>% select("Q-value (CD JP)", "Q-value (CD US2)", "Q-value (CD Spain)", "Q-value (CD Netherlands)", "Q-value (CD China)") -> qval_CD
+
+qval_IBD[is.na(qval_IBD)] <- 1
+qval_UC[is.na(qval_UC)] <- 1
+qval_CD[is.na(qval_CD)] <- 1
+
+Fig1 %>% select("Coefficient (IBD JP)", "Coefficient (IBD US2)", "Coefficient (IBD Spain)", "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
+Fig1_UC %>% select("Coefficient (UC JP)",  "Coefficient (UC US2)", "Coefficient (UC Spain)", "Coefficient (UC Netherlands)") -> Gram_coef_UC
+Fig1_CD %>% select("Coefficient (CD JP)", "Coefficient (CD US2)", "Coefficient (CD Spain)", "Coefficient (CD Netherlands)", "Coefficient (CD China)") -> Gram_coef_CD
+
+anno_width = unit(2, "cm")
+
+rename(.data= Gram_coef_IBD, "Japanese 4D cohort" = "Coefficient (IBD JP)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "US cohort" = "Coefficient (IBD US2)") -> Gram_coef_IBD #Franzosa_2018
+rename(.data= Gram_coef_IBD, "NL cohort" = "Coefficient (IBD Netherlands)") -> Gram_coef_IBD
+rename(.data= Gram_coef_IBD, "ES cohort" = "Coefficient (IBD Spain)") -> Gram_coef_IBD
+
+rename(.data= Gram_coef_UC, "Japanese 4D cohort" = "Coefficient (UC JP)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "US cohort" = "Coefficient (UC US2)") -> Gram_coef_UC #Franzosa_2018
+rename(.data= Gram_coef_UC, "NL cohort" = "Coefficient (UC Netherlands)") -> Gram_coef_UC
+rename(.data= Gram_coef_UC, "ES cohort" = "Coefficient (UC Spain)") -> Gram_coef_UC
+
+rename(.data= Gram_coef_CD, "Japanese 4D cohort" = "Coefficient (CD JP)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "US cohort" = "Coefficient (CD US2)") -> Gram_coef_CD #Franzosa_2018
+rename(.data= Gram_coef_CD, "NL cohort" = "Coefficient (CD Netherlands)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "ES cohort" = "Coefficient (CD Spain)") -> Gram_coef_CD
+rename(.data= Gram_coef_CD, "CN cohort" = "Coefficient (CD China)") -> Gram_coef_CD
+
+lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
+
+p1=pheatmap(as.matrix(Gram_coef_IBD), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(qval_IBD < 0.1,"*", ""), nrow(qval_IBD)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-2.5,0,1.5), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
+p2=pheatmap(as.matrix(Gram_coef_UC), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(qval_UC < 0.1,"*", ""), nrow(qval_UC)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-2.5,0,1.5), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
+p3=pheatmap(as.matrix(Gram_coef_CD), fontsize = 5, cellwidth = 8, cellheight = 8, cluster_rows = FALSE, cluster_cols = FALSE, fontsize_col = 8, fontsize_row = 8, display_numbers = matrix(ifelse(qval_CD < 0.1,"*", ""), nrow(qval_CD)), fontsize_number = 7, border_color = "black", col = circlize::colorRamp2(c(-2.5,0,1.5), c("navy", "white", "firebrick3")), name = "Effect size", heatmap_legend_param = list(color_bar = "continuous"))
+
+draw(p1, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
+draw(p2, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
+draw(p3, heatmap_legend_side = "left", annotation_legend_side = "left", annotation_legend_list = list(lgd_sig))
+
+#Venn diagram (Supplementary Figure 3d-f)
 library(VennDiagram)
 MaAsLin_IBD = if_else(All_country$"Q-value (IBD JP)" < 0.1, All_country[,"Feature"], NA) %>% na.omit
 MaAsLin_UC =if_else(All_country$"Q-value (UC JP)" < 0.1, All_country[,"Feature"], NA) %>% na.omit
@@ -760,7 +829,7 @@ venn.diagram(
   cat.col = c("#868686FF", "#CD534CFF"),
 )
 
-#Spearman correlation analysis (Figure 1c, Supplementary Figure 3)
+#Spearman correlation analysis (Figure 1c, Supplementary Figure 2)
 #US2(Franzosa)vsJP 
 sp <- ggplot(All_country, aes(x = All_country$"Coefficient (IBD JP)", y = All_country$"Coefficient (IBD US2)")) +
   geom_point() +
