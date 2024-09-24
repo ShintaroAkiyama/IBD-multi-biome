@@ -4,7 +4,7 @@ library(NetCoMi)
 library(ComplexHeatmap)
 library(progress)
 
-#UC analysis (Figure 5b, Supplementary Figure 11)
+#UC analysis (Figure 5b)
 #Bacteria list
 #SP_input2_bacteriome from bacteriome analysis including bacterial species with abs coef >1 and FDR<0.1 in UC or CD
 rownames_to_column(SP_input2_bacteriome, "feature") -> SP_input2_bacteriome 
