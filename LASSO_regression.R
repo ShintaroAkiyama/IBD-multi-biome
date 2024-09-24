@@ -1,4 +1,4 @@
-## script to construct LASSO model to distinguish between IBD and controls
+## script to construct LASSO model to distinguish between IBD and controls (Supplementary Figure 3)
 ## Suguru Nishijima (nishjima.suguru@gmail.com)
 
 ## read library
