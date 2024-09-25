@@ -282,7 +282,7 @@ p2=pheatmap(as.matrix(ARG_coef_UC_CD), fontsize = 8, cellwidth = 6, cellheight =
 ra = rowAnnotation(df=anottation_2, col = list(Class=c("AMINOGLYCOSIDE" = "#ff4b00", "AMPHENICOLS"="#fff100", "ANTIBIOTIC EFFLUX PUMP"="#03af7a", "DRUGS FOR TUBERCULOSIS"="#005aff", "MACROLIDES, LINCOSAMIDES AND STREPTOGRAMINS" = "#4dc4ff", "OTHER ANTIBACTERIALS"="#ffcabf", "OTHER BETA-LACTAM"="#f6aa00", "OTHERS" = "#c8c8cb", "SULFONAMIDES & TRIMETHOPRIM" = "#990099", "TETRACYCLINES" = "#804000", "QUINOLONE" = "#c9ace6")), simple_anno_size = unit(2, "mm"), gp = gpar(col = "black"), annotation_name_gp= gpar(fontsize = 7))
 ra3 = rowAnnotation(df=anottation_3, col = list(Mechanism=c("antibiotic efflux" = "#ff4b00", "antibiotic efflux;antibiotic target alteration"="#fff100", "antibiotic efflux;reduced permeability to antibiotic"="#03af7a", "antibiotic inactivation"="#005aff", "antibiotic target alteration" = "#4dc4ff", "antibiotic target protection"="#ffcabf", "antibiotic target alteration;antibiotic target replacement"="#f6aa00", "antibiotic target replacement" = "#990099", "NoMatch" = "#c8c8cb")), simple_anno_size = unit(2, "mm"), gp = gpar(col = "black"), annotation_name_gp= gpar(fontsize = 7))
 
-Legend_list <- list(`Escherichia coli` = list(title = "Species that posses the ARG", at = c("infect", "not infect"), labels = c("YES", "NO")))
+Legend_list <- list(`Escherichia coli` = list(title = "Species that possess the ARG", at = c("infect", "not infect"), labels = c("YES", "NO")))
 
 lgd_sig = Legend(pch = "*", type = "points", labels = "FDR < 0.1")
 
