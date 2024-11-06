@@ -49,9 +49,9 @@ ggplot(ARG_compare, aes(Group, Sum_of_ARG, fill = Group)) +
   guides(fill=guide_legend(title=NULL))
 
 #Check Pval
-P_num <- ggbetweenstats(plot.type = "box", data = data, x = Group, y = "Number of ARG", type = "nonparametirc", title = "", 
+P_num <- ggbetweenstats(plot.type = "box", data = ARG_compare, x = Group, y = Number_of_ARG, type = "nonparametirc", title = "", 
                         centrality.plotting = FALSE, ggplot.component = list(theme(text=element_text(size=20)), scale_x_discrete(limits=c("Controls", "UC", "CD"))), results.subtitle = FALSE, centrality.point.args = list(size = 4, color = "darkred"), centrality.label.args = list(size = 4, nudge_x = 0.5, segment.linetype = 2, min.segment.length = 0), ggsignif.args = list(textsize = 6, tip_length = 0.01))
-P_sum <- ggbetweenstats(plot.type = "box", data = data, x = Group, y = "Sum of ARG abundance (RPKM)", type = "nonparametirc", title = "", 
+P_sum <- ggbetweenstats(plot.type = "box", data = ARG_compare, x = Group, y = Sum_of_ARG, type = "nonparametirc", title = "", 
                         centrality.plotting = FALSE, ggplot.component = list(theme(text=element_text(size=20)), scale_x_discrete(limits=c("Controls", "UC", "CD"))), results.subtitle = FALSE, centrality.point.args = list(size = 4, color = "darkred"), centrality.label.args = list(size = 4, nudge_x = 0.5, segment.linetype = 2, min.segment.length = 0), ggsignif.args = list(textsize = 6, tip_length = 0.01))
 
 combine_plots(
